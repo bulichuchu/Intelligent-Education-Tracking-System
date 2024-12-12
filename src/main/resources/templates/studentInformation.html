@@ -1,17 +1,24 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
   <title>学生信息</title>
+  <script>
+    function showSuccessMessage() {
+      alert("您的信息更新成功！");
+    }
+  </script>
 </head>
 <body>
 <h1>学生信息</h1>
-<p>学号: <span th:text="${studentInformation.getStudentId()}"></span></p>
-<p>姓名: <span th:text="${studentInformation.getStudentName()}"></span></p>
-<p>班级: <span th:text="${studentInformation.getStudentClass().getClassName()}"></span></p>
-<p>性别: <span th:text="${studentInformation.getSex()}"></span></p>
-<p>年龄: <span th:text="${studentInformation.getAge()}"></span></p>
-<p>家庭住址: <span th:text="${studentInformation.getAddress()}"></span></p>
-<p>联系电话: <span th:text="${studentInformation.getPhoneNumber()}"></span></p>
+<form th:action="@{/students/updateStudent}" th:object="${studentInformation}" method="post" onsubmit="showSuccessMessage()">
+  <p>学号: <input type="text" th:field="*{studentId}" readonly="true" /></p>
+  <p>姓名: <input type="text" th:field="*{studentName}" /></p>
+  <p>班级名称: <input type="text" th:field="*{studentClass.className}" /></p>
+  <p>性别: <input type="text" th:field="*{sex}" /></p>
+  <p>年龄: <input type="number" th:field="*{age}" /></p>
+  <p>地址: <input type="text" th:field="*{address}" /></p>
+  <p>电话号码: <input type="text" th:field="*{phoneNumber}" /></p>
+  <button type="submit">更新</button>
+</form>
 </body>
 </html>

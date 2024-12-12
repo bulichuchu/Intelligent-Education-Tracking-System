@@ -2,10 +2,7 @@ package com.IntelligentEducationTrackingSystem.DAO;
 
 import com.IntelligentEducationTrackingSystem.PO.Students;
 
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Result;
-import org.apache.ibatis.annotations.Results;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 @Mapper
 public interface StudentsDao {
@@ -24,4 +21,9 @@ public interface StudentsDao {
             @Result(property = "studentClass.className", column = "className")
     })
     public Students getById(String studentId);
+    @Update("UPDATE students SET studentName=#{studentName}, sex=#{sex}, age=#{age}, address=#{address}, phoneNumber=#{phoneNumber} WHERE studentId=#{studentId}")
+    void updateStudent(Students student);
+
+    @Update("UPDATE classes SET className=#{className} WHERE classId=(SELECT classId FROM students WHERE studentId=#{studentId})")
+    void updateStudentClassName(@Param("studentId") String studentId, @Param("className") String className);
 }

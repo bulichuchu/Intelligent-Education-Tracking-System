@@ -13,4 +13,11 @@ public class StudentsServiceImpl implements StudentsService {
     public Students getById() {
         return studentsDao.getById("S001");
     }
+    public void updateStudent(Students student) {
+        studentsDao.updateStudent(student);
+    }
+
+    public void updateStudentClassName(String studentId, String className) {
+        studentsDao.updateStudentClassName(studentId, className);
+    }
 }

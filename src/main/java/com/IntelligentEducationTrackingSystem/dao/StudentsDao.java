@@ -1,11 +1,10 @@
-package com.intelligenteducationtrackingsystem.dao;
+package com.IntelligentEducationTrackingSystem.dao;
 
-import com.intelligenteducationtrackingsystem.po.Students;
+import com.IntelligentEducationTrackingSystem.po.Students;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
-import java.util.List;
 @Mapper
 public interface StudentsDao {
     @Select("select * from students where studentid = #{studentid}")

@@ -1,4 +1,4 @@
-package com.intelligenteducationtrackingsystem.po;
+package com.IntelligentEducationTrackingSystem.po;
 
 public class Students {
     private String studentid;

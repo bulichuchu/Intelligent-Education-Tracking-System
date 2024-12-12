@@ -1,4 +1,4 @@
-package com.intelligenteducationtrackingsystem.PO;
+package com.IntelligentEducationTrackingSystem.PO;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;

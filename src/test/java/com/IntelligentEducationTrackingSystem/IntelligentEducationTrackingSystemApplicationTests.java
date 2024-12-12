@@ -1,6 +1,6 @@
 package com.IntelligentEducationTrackingSystem;
 
-import com.IntelligentEducationTrackingSystem.dao.StudentsDao;
+import com.IntelligentEducationTrackingSystem.DAO.StudentsDao;
 import com.IntelligentEducationTrackingSystem.PO.Students;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,4 +1,4 @@
-package com.IntelligentEducationTrackingSystem.dao;
+package com.IntelligentEducationTrackingSystem.DAO;
 
 import com.IntelligentEducationTrackingSystem.PO.Students;
 

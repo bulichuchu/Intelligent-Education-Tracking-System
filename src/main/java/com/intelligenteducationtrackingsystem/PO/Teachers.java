@@ -7,60 +7,60 @@ import javax.persistence.Table;
 @Table(name = "teachers") // 映射到数据库中的 teachers 表
 public class Teachers {
     @Id
-    private String TeacherId; // 数据表中的 teacherid 列
-    private String TeacherName; // 教师姓名，对应数据表中的 teachername 列
-    private String SubjectId; // 教授学科的编号，对应数据表中的 subjectid 列
-    private String Email; // 教师邮箱，对应数据表中的 email 列
-    private String TphoneNumber; // 教师电话号码，对应数据表中的 tphonenumber 列
+    private String teacherId; // 数据表中的 teacherid 列
+    private String teacherName; // 教师姓名，对应数据表中的 teachername 列
+    private String subjectId; // 教授学科的编号，对应数据表中的 subjectid 列
+    private String email; // 教师邮箱，对应数据表中的 email 列
+    private String tphoneNumber; // 教师电话号码，对应数据表中的 tphonenumber 列
 
     // 默认构造函数
     public Teachers() {}
 
     public Teachers(String teacherId, String teacherName, String subjectId, String email, String tphonenumber) {
-        this.TeacherId = teacherId;
-        this.TeacherName = teacherName;
-        this.SubjectId = subjectId;
-        this.Email = email;
-        this.TphoneNumber = tphonenumber;
+        this.teacherId = teacherId;
+        this.teacherName = teacherName;
+        this.subjectId = subjectId;
+        this.email = email;
+        this.tphoneNumber = tphonenumber;
     }
 
     public String getTeacherId() {
-        return TeacherId;
+        return teacherId;
     }
 
     public void setTeacherId(String teacherId) {
-        this.TeacherId = teacherId;
+        this.teacherId = teacherId;
     }
 
     public String getTeacherName() {
-        return TeacherName;
+        return teacherName;
     }
 
     public void setTeacherName(String teacherName) {
-        this.TeacherName = teacherName;
+        this.teacherName = teacherName;
     }
 
     public String getSubjectId() {
-        return SubjectId;
+        return subjectId;
     }
 
     public void setSubjectId(String subjectId) {
-        this.SubjectId = subjectId;
+        this.subjectId = subjectId;
     }
 
     public String getEmail() {
-        return Email;
+        return email;
     }
 
     public void setEmail(String email) {
-        this.Email = email;
+        this.email = email;
     }
 
     public String getTphonenumber() {
-        return TphoneNumber;
+        return tphoneNumber;
     }
 
     public void setTphonenumber(String tphonenumber) {
-        this.TphoneNumber = tphonenumber;
+        this.tphoneNumber = tphonenumber;
     }
 }

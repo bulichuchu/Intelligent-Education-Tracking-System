@@ -7,49 +7,49 @@ import javax.persistence.Table;
 @Table(name = "users") // 映射到数据库中的 user 表
 public class Users {
     @Id // 表示此字段为主键
-    private  String UserId;//数据表中的 userid 列
-    private String UserName; // 用户名，数据表中的 username 列
-    private String UserPassword;//用户密码，数据表中userpassword列
-    private String UserType;//用户类型
+    private  String userId;//数据表中的 userid 列
+    private String userName; // 用户名，数据表中的 username 列
+    private String userPassword;//用户密码，数据表中userpassword列
+    private String userType;//用户类型
     // 默认构造函数
     public Users() {}
     public Users(String userId, String userName, String userPassword, String userType) {
-        this.UserId = userId;
-        this.UserName = userName;
-        this.UserPassword = userPassword;
-        this.UserType = userType;
+        this.userId = userId;
+        this.userName = userName;
+        this.userPassword = userPassword;
+        this.userType = userType;
     }
 
     public String getUserId() {
-        return UserId;
+        return userId;
     }
 
     public void setUserId(String userId) {
-        UserId = userId;
+        this.userId = userId;
     }
 
     public String getUserName() {
-        return UserName;
+        return userName;
     }
 
     public void setUserName(String userName) {
-        UserName = userName;
+        this.userName = userName;
     }
 
     public String getUserPassword() {
-        return UserPassword;
+        return userPassword;
     }
 
     public void setUserPassword(String userPassword) {
-        UserPassword = userPassword;
+        this.userPassword = userPassword;
     }
 
     public String getUserType() {
-        return UserType;
+        return userType;
     }
 
     public void setUserType(String userType) {
-        UserType = userType;
+        this.userType = userType;
     }
 }
 

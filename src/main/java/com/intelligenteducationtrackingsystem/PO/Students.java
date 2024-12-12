@@ -91,13 +91,13 @@ public class Students {
     @Override
     public String toString() {
         return "Students{" +
-                "studentid='" + StudentId + '\'' +
-                ", studentname='" + StudentName + '\'' +
-                ", classid='" + ClassId + '\'' +
-                ", sex='" + Sex + '\'' +
-                ", age=" + Age +
-                ", address='" + Address + '\'' +
-                ", phonenumber='" + PhoneNumber + '\'' +
+                "studentid='" + studentId + '\'' +
+                ", studentname='" + studentName + '\'' +
+                ", classid='" + classId + '\'' +
+                ", sex='" + sex + '\'' +
+                ", age=" + age +
+                ", address='" + address + '\'' +
+                ", phonenumber='" + phoneNumber + '\'' +
                 '}';
     }
 }

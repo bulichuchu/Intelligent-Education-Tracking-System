@@ -8,72 +8,72 @@ import javax.persistence.Table;
 public class StudentErrorLogs {
 
     @Id
-    private String ErrorLogId; // 对应数据表中的 errorlogid 列，作为主键
+    private String errorLogId; // 对应数据表中的 errorlogid 列，作为主键
 
-    private String StudentId; // 对应数据表中的 studentid 列，关联出现错误的学生编号
-    private String AssignmentId; // 对应数据表中的 assignmentid 列，关联作业编号
-    private String ErrorQuestion; // 对应数据表中的 errorquestion 列，记录出现错误的题目内容描述
-    private String ErrorAnswer; // 对应数据表中的 erroranswer 列，记录学生答错的答案内容
-    private String CorrectAnswer; // 对应数据表中的 correctanswer 列，记录正确答案内容
+    private String studentId; // 对应数据表中的 studentid 列，关联出现错误的学生编号
+    private String assignmentId; // 对应数据表中的 assignmentid 列，关联作业编号
+    private String errorQuestion; // 对应数据表中的 errorquestion 列，记录出现错误的题目内容描述
+    private String errorAnswer; // 对应数据表中的 erroranswer 列，记录学生答错的答案内容
+    private String correctAnswer; // 对应数据表中的 correctanswer 列，记录正确答案内容
 
     // 默认构造函数
     public StudentErrorLogs() {}
 
     public StudentErrorLogs(String errorLogId, String studentId, String assignmentId, String errorQuestion, String errorAnswer, String correctAnswer) {
-        this.ErrorLogId = errorLogId;
-        this.StudentId = studentId;
-        this.AssignmentId = assignmentId;
-        this.ErrorQuestion = errorQuestion;
-        this.ErrorAnswer = errorAnswer;
-        this.CorrectAnswer = correctAnswer;
+        this.errorLogId = errorLogId;
+        this.studentId = studentId;
+        this.assignmentId = assignmentId;
+        this.errorQuestion = errorQuestion;
+        this.errorAnswer = errorAnswer;
+        this.correctAnswer = correctAnswer;
     }
 
     public String getErrorLogId() {
-        return ErrorLogId;
+        return errorLogId;
     }
 
     public void setErrorLogId(String errorLogId) {
-        this.ErrorLogId = errorLogId;
+        this.errorLogId = errorLogId;
     }
 
     public String getStudentId() {
-        return StudentId;
+        return studentId;
     }
 
     public void setStudentId(String studentId) {
-        this.StudentId = studentId;
+        this.studentId = studentId;
     }
 
     public String getAssignmentId() {
-        return AssignmentId;
+        return assignmentId;
     }
 
     public void setAssignmentId(String assignmentId) {
-        this.AssignmentId = assignmentId;
+        this.assignmentId = assignmentId;
     }
 
 
     public String getErrorQuestion() {
-        return ErrorQuestion;
+        return errorQuestion;
     }
 
     public void setErrorQuestion(String errorQuestion) {
-        this.ErrorQuestion = errorQuestion;
+        this.errorQuestion = errorQuestion;
     }
 
     public String getErrorAnswer() {
-        return ErrorAnswer;
+        return errorAnswer;
     }
 
     public void setErrorAnswer(String errorAnswer) {
-        this.ErrorAnswer = errorAnswer;
+        this.errorAnswer = errorAnswer;
     }
 
     public String getCorrectAnswer() {
-        return CorrectAnswer;
+        return correctAnswer;
     }
 
     public void setCorrectAnswer(String correctAnswer) {
-        this.CorrectAnswer = correctAnswer;
+        this.correctAnswer = correctAnswer;
     }
 }

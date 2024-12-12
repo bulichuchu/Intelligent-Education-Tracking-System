@@ -8,81 +8,81 @@ import javax.persistence.Table;
 public class LearningResources {
 
     @Id
-    private String ResourceId; // 对应数据表中的 resourceid 列，作为主键
+    private String resourceId; // 对应数据表中的 resourceid 列，作为主键
 
-    private String ResourceName; // 对应数据表中的 resourcename 列，存储资源名称
-    private String ResourceType; // 对应数据表中的 resourcetype 列，记录资源类型，如视频、文档、音频等
-    private String SubjectId; // 对应数据表中的 subjectid 列，关联所属学科编号
-    private String TeacherId; // 对应数据表中的 teacherid 列，关联上传资源的教师编号
-    private String UploadTime; // 对应数据表中的 uploadtime 列，记录资源上传时间
-    private String Url;//对应数据表中url列，即记录资源链接
+    private String resourceName; // 对应数据表中的 resourcename 列，存储资源名称
+    private String resourceType; // 对应数据表中的 resourcetype 列，记录资源类型，如视频、文档、音频等
+    private String subjectId; // 对应数据表中的 subjectid 列，关联所属学科编号
+    private String teacherId; // 对应数据表中的 teacherid 列，关联上传资源的教师编号
+    private String uploadTime; // 对应数据表中的 uploadtime 列，记录资源上传时间
+    private String url;//对应数据表中url列，即记录资源链接
 
     // 默认构造函数
     public LearningResources() {}
 
     public LearningResources(String resourceId, String resourceName, String resourceType, String subjectId, String teacherId, String uploadTime,String url) {
-        this.ResourceId = resourceId;
-        this.ResourceName = resourceName;
-        this.ResourceType = resourceType;
-        this.SubjectId = subjectId;
-        this.TeacherId = teacherId;
-        this.UploadTime = uploadTime;
-        this.Url= url;
+        this.resourceId = resourceId;
+        this.resourceName = resourceName;
+        this.resourceType = resourceType;
+        this.subjectId = subjectId;
+        this.teacherId = teacherId;
+        this.uploadTime = uploadTime;
+        this.url= url;
     }
 
     public String getResourceId() {
-        return ResourceId;
+        return resourceId;
     }
 
     public void setResourceId(String resourceId) {
-        this.ResourceId = resourceId;
+        this.resourceId = resourceId;
     }
 
     public String getResourceName() {
-        return ResourceName;
+        return resourceName;
     }
 
     public void setResourceName(String resourceName) {
-        this.ResourceName = resourceName;
+        this.resourceName = resourceName;
     }
 
     public String getResourceType() {
-        return ResourceType;
+        return resourceType;
     }
 
     public void setResourceType(String resourceType) {
-        this.ResourceType = resourceType;
+        this.resourceType = resourceType;
     }
 
     public String getSubjectId() {
-        return SubjectId;
+        return subjectId;
     }
 
     public void setSubjectId(String subjectId) {
-        this.SubjectId = subjectId;
+        this.subjectId = subjectId;
     }
 
     public String getTeacherId() {
-        return TeacherId;
+        return teacherId;
     }
 
     public void setTeacherId(String teacherId) {
-        this.TeacherId = teacherId;
+        this.teacherId = teacherId;
     }
 
     public String getUploadTime() {
-        return UploadTime;
+        return uploadTime;
     }
 
     public void setUploadTime(String uploadTime) {
-        this.UploadTime = uploadTime;
+        this.uploadTime = uploadTime;
     }
 
     public String getUrl() {
-        return Url;
+        return url;
     }
 
     public void setUrl(String url) {
-        Url = url;
+        url = url;
     }
 }

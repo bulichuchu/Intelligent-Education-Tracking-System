@@ -9,41 +9,41 @@ import java.util.Date;
 public class Qrcodes{
 
     @Id
-    private String QrcodeId; // 对应数据表中的 qrcodeid 列，作为主键
+    private String qrcodeId; // 对应数据表中的 qrcodeid 列，作为主键
 
-    private String StudentId; // 对应数据表中的 studentid 列，关联学生编号
-    private Date GenerationTime; // 对应数据表中的 generationtime 列，记录二维码生成时间
+    private String studentId; // 对应数据表中的 studentid 列，关联学生编号
+    private Date generationTime; // 对应数据表中的 generationtime 列，记录二维码生成时间
 
     // 默认构造函数
     public Qrcodes() {}
 
     public Qrcodes(String qrcodeId, String studentId, Date generationTime) {
-        this.QrcodeId = qrcodeId;
-        this.StudentId = studentId;
-        this.GenerationTime = generationTime;
+        this.qrcodeId = qrcodeId;
+        this.studentId = studentId;
+        this.generationTime = generationTime;
     }
 
     public String getQrcodeId() {
-        return QrcodeId;
+        return qrcodeId;
     }
 
     public void setQrcodeId(String qrcodeId) {
-        this.QrcodeId = qrcodeId;
+        this.qrcodeId = qrcodeId;
     }
 
     public String getStudentId() {
-        return StudentId;
+        return studentId;
     }
 
     public void setStudentId(String studentId) {
-        this.StudentId = studentId;
+        this.studentId = studentId;
     }
 
     public Date getGenerationTime() {
-        return GenerationTime;
+        return generationTime;
     }
 
     public void setGenerationTime(Date generationTime) {
-        this.GenerationTime = generationTime;
+        this.generationTime = generationTime;
     }
 }

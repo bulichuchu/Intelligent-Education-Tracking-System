@@ -8,31 +8,31 @@ import javax.persistence.Table;
 public class Subjects {
 
     @Id
-    private String SubjectId; // 对应数据表中的 subjectid 列，作为主键
+    private String subjectId; // 对应数据表中的 subjectid 列，作为主键
 
-    private String SubjectName; // 对应数据表中的 subjectname 列，存储学科名称
+    private String subjectName; // 对应数据表中的 subjectname 列，存储学科名称
 
     // 默认构造函数
     public Subjects() {}
 
     public Subjects(String subjectId, String subjectName) {
-        this.SubjectId = subjectId;
-        this.SubjectName = subjectName;
+        this.subjectId = subjectId;
+        this.subjectName = subjectName;
     }
 
     public String getSubjectId() {
-        return SubjectId;
+        return subjectId;
     }
 
     public void setSubjectId(String subjectId) {
-        this.SubjectId = subjectId;
+        this.subjectId = subjectId;
     }
 
     public String getSubjectName() {
-        return SubjectName;
+        return subjectName;
     }
 
     public void setSubjectName(String subjectName) {
-        this.SubjectName = subjectName;
+        this.subjectName = subjectName;
     }
 }

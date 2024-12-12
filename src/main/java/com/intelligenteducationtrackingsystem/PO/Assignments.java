@@ -9,70 +9,70 @@ import java.util.Date;
 public class Assignments {
 
     @Id
-    private String AssignmentId; // 对应数据表中的 assignmentid 列，作为主键
-    private String AssignmentName; // 对应数据表中的 assignmentname 列，存储作业标题
-    private String SubjectId; // 对应数据表中的 subjectid 列，关联学科编号
-    private String TeacherId; // 对应数据表中的 teacherid 列，关联布置作业的教师编号
-    private Date ReleaseTime; // 对应数据表中的 releasetime 列，记录作业发布时间
-    private Date DueTime; // 对应数据表中的 duetime 列，设置作业截止时间
+    private String assignmentId; // 对应数据表中的 assignmentid 列，作为主键
+    private String assignmentName; // 对应数据表中的 assignmentname 列，存储作业标题
+    private String subjectId; // 对应数据表中的 subjectid 列，关联学科编号
+    private String teacherId; // 对应数据表中的 teacherid 列，关联布置作业的教师编号
+    private Date releaseTime; // 对应数据表中的 releasetime 列，记录作业发布时间
+    private Date dueTime; // 对应数据表中的 duetime 列，设置作业截止时间
 
     // 默认构造函数
     public Assignments() {}
 
     public Assignments(String assignmentId, String assignmentName,String subjectId, String teacherId,  Date releaseTime, Date dueTime) {
-        this.AssignmentId = assignmentId;
-        this.SubjectId = subjectId;
-        this.TeacherId = teacherId;
-        this.AssignmentName = assignmentName;
-        this.ReleaseTime = releaseTime;
-        this.DueTime = dueTime;
+        this.assignmentId = assignmentId;
+        this.subjectId = subjectId;
+        this.teacherId = teacherId;
+        this.assignmentName = assignmentName;
+        this.releaseTime = releaseTime;
+        this.dueTime = dueTime;
     }
 
     public String getAssignmentId() {
-        return AssignmentId;
+        return assignmentId;
     }
 
     public void setAssignmentId(String assignmentId) {
-        this.AssignmentId = assignmentId;
+        this.assignmentId = assignmentId;
     }
 
     public String getAssignmentName() {
-        return AssignmentName;
+        return assignmentName;
     }
 
     public void setAssignmentName(String assignmentName) {
-        AssignmentName = assignmentName;
+        assignmentName = assignmentName;
     }
 
     public String getSubjectId() {
-        return SubjectId;
+        return subjectId;
     }
 
     public void setSubjectId(String subjectId) {
-        this.SubjectId = subjectId;
+        this.subjectId = subjectId;
     }
 
     public String getTeacherId() {
-        return TeacherId;
+        return teacherId;
     }
 
     public void setTeacherId(String teacherId) {
-        this.TeacherId = teacherId;
+        this.teacherId = teacherId;
     }
 
     public Date getReleaseTime() {
-        return ReleaseTime;
+        return releaseTime;
     }
 
     public void setReleaseTime(Date releaseTime) {
-        this.ReleaseTime = releaseTime;
+        this.releaseTime = releaseTime;
     }
 
     public Date getDueTime() {
-        return DueTime;
+        return dueTime;
     }
 
     public void setDueTime(Date dueTime) {
-        this.DueTime = dueTime;
+        this.dueTime = dueTime;
     }
 }

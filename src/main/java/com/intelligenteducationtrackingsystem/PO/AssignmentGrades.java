@@ -9,81 +9,81 @@ import java.util.Date;
 public class AssignmentGrades {
 
     @Id
-    private String GradeId; // 对应数据表中的 gradeid 列，作为主键
+    private String gradeId; // 对应数据表中的 gradeid 列，作为主键
 
-    private String AssignmentId; // 对应数据表中的 assignmentid 列，关联作业编号
-    private String StudentId; // 对应数据表中的 studentid 列，关联学生编号
-    private int Grade; // 对应数据表中的 grade 列，存储学生此次作业获得的成绩
-    private String TeacherId; // 对应数据表中的 teacherid 列，存放教师id
-    private Date GradingTime; // 存放打分时间，对应数据表中的 gradingtime 列
-    private String Path; // 存放作业提交路径，对应数据表中的 path 列
+    private String assignmentId; // 对应数据表中的 assignmentid 列，关联作业编号
+    private String studentId; // 对应数据表中的 studentid 列，关联学生编号
+    private int grade; // 对应数据表中的 grade 列，存储学生此次作业获得的成绩
+    private String teacherId; // 对应数据表中的 teacherid 列，存放教师id
+    private Date gradingTime; // 存放打分时间，对应数据表中的 gradingtime 列
+    private String path; // 存放作业提交路径，对应数据表中的 path 列
 
     // 默认构造函数
     public AssignmentGrades() {}
 
     public AssignmentGrades(String gradeId, String assignmentId, String studentId, int grade, String teacherId, Date gradingTime, String path) {
-        this.GradeId = gradeId;
-        this.AssignmentId = assignmentId;
-        this.StudentId = studentId;
-        this.Grade = grade;
-        this.TeacherId = teacherId;
-        this.GradingTime = gradingTime;
-        this.Path = path;
+        this.gradeId = gradeId;
+        this.assignmentId = assignmentId;
+        this.studentId = studentId;
+        this.grade = grade;
+        this.teacherId = teacherId;
+        this.gradingTime = gradingTime;
+        this.path = path;
     }
 
     public String getGradeId() {
-        return GradeId;
+        return gradeId;
     }
 
     public void setGradeId(String gradeId) {
-        this.GradeId = gradeId;
+        this.gradeId = gradeId;
     }
 
     public String getAssignmentId() {
-        return AssignmentId;
+        return assignmentId;
     }
 
     public void setAssignmentId(String assignmentId) {
-        this.AssignmentId = assignmentId;
+        this.assignmentId = assignmentId;
     }
 
     public String getStudentId() {
-        return StudentId;
+        return studentId;
     }
 
     public void setStudentId(String studentId) {
-        this.StudentId = studentId;
+        this.studentId = studentId;
     }
 
     public int getGrade() {
-        return Grade;
+        return grade;
     }
 
     public void setGrade(int grade) {
-        this.Grade = grade;
+        this.grade = grade;
     }
 
     public String getTeacherId() {
-        return TeacherId;
+        return teacherId;
     }
 
     public void setTeacherId(String teacherId) {
-        this.TeacherId = teacherId;
+        this.teacherId = teacherId;
     }
 
     public Date getGradingTime() {
-        return GradingTime;
+        return gradingTime;
     }
 
     public void setGradingTime(Date gradingTime) {
-        this.GradingTime = gradingTime;
+        this.gradingTime = gradingTime;
     }
 
     public String getPath() {
-        return Path;
+        return path;
     }
 
     public void setPath(String path) {
-        this.Path = path;
+        this.path = path;
     }
 }

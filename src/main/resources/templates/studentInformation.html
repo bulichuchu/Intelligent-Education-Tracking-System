@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>学生信息</title>
+</head>
+<body>
+<h1>学生信息</h1>
+<p>学号: <span th:text="${studentInformation.getStudentId()}"></span></p>
+<p>姓名: <span th:text="${studentInformation.getStudentName()}"></span></p>
+<p>班级: <span th:text="${studentInformation.getStudentClass().getClassName()}"></span></p>
+<p>性别: <span th:text="${studentInformation.getSex()}"></span></p>
+<p>年龄: <span th:text="${studentInformation.getAge()}"></span></p>
+<p>家庭住址: <span th:text="${studentInformation.getAddress()}"></span></p>
+<p>联系电话: <span th:text="${studentInformation.getPhoneNumber()}"></span></p>
+</body>
+</html>

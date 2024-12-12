@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>提交状态</title>
+</head>
+<body>
+<h1>提交状态列表</h1>
+<table border="1">
+    <thead>
+    <tr>
+        <th>提交状态ID</th>
+        <th>作业ID</th>
+        <th>学生ID</th>
+        <th>提交时间</th>
+        <th>状态</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- 遍历提交状态列表并显示数据 -->
+    <tr th:each="submissionStatus : ${submissionStatuses}">
+        <td th:text="${submissionStatus.submissionStatusId}"></td>
+        <td th:text="${submissionStatus.assignmentId}"></td>
+        <td th:text="${submissionStatus.studentId}"></td>
+        <td th:text="${submissionStatus.submissionTime}"></td>
+        <td th:text="${submissionStatus.status}"></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

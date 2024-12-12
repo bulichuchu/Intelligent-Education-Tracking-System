@@ -1,4 +1,5 @@
 package com.IntelligentEducationTrackingSystem.PO;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -18,7 +19,8 @@ public class Students {
     private String PhoneNumber; // 对应数据表中的 phonenumber 列，为学生电话号码
 
     // 默认构造函数
-    public Students() {}
+    public Students() {
+    }
 
     public Students(String studentId, String studentName, String classId, String sex, int age, String address, String phoneNumber) {
         this.StudentId = studentId;
@@ -84,5 +86,18 @@ public class Students {
 
     public void setPhoneNumber(String phoneNumber) {
         this.PhoneNumber = phoneNumber;
+    }
+
+    @Override
+    public String toString() {
+        return "Students{" +
+                "studentid='" + StudentId + '\'' +
+                ", studentname='" + StudentName + '\'' +
+                ", classid='" + ClassId + '\'' +
+                ", sex='" + Sex + '\'' +
+                ", age=" + Age +
+                ", address='" + Address + '\'' +
+                ", phonenumber='" + PhoneNumber + '\'' +
+                '}';
     }
 }

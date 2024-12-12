@@ -1,7 +1,7 @@
 package com.IntelligentEducationTrackingSystem;
 
 import com.IntelligentEducationTrackingSystem.dao.StudentsDao;
-import com.IntelligentEducationTrackingSystem.po.Students;
+import com.IntelligentEducationTrackingSystem.PO.Students;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

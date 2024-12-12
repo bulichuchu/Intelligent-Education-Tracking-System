@@ -1,6 +1,6 @@
 package com.IntelligentEducationTrackingSystem.dao;
 
-import com.IntelligentEducationTrackingSystem.po.Students;
+import com.IntelligentEducationTrackingSystem.PO.Students;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;

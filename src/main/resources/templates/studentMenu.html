@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>学生菜单</title>
+</head>
+<body>
+<h1><span th:text="${studentName}"></span></h1>
+<ul>
+    <li><a th:href="@{/students/studentInformation(studentId=${studentId})}">我的信息</a></li>
+    <li><a th:href="@{/students/assignmentDetails(studentId=${studentId})}">我的作业</a></li>
+    <li><a th:href="@{/students/myResources(studentId=${studentId})}">我的学习资源</a></li>
+</ul>
+</body>
+</html>

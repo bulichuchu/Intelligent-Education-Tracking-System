@@ -2,30 +2,49 @@ package com.IntelligentEducationTrackingSystem.Controller;
 
 import com.IntelligentEducationTrackingSystem.PO.Students;
 import com.IntelligentEducationTrackingSystem.Service.StudentsService;
+import com.IntelligentEducationTrackingSystem.pojo.assignmentDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 @Controller
 @RequestMapping("/students")
 public class StudentsController {
     @Autowired
     private StudentsService studentsService;
-    @GetMapping("/studentInformation")
+    @GetMapping("/studentMenu")//菜单
+    public String showStudentMenu(@RequestParam("studentId") String studentId, Model model) {
+        model.addAttribute("studentId", studentId);
+        model.addAttribute("studentName", studentsService.getById(studentId).getStudentName());
+        return "studentMenu";
+    }
+    @GetMapping("/studentInformation")//显示个人信息
     public ModelAndView getById(@RequestParam("studentId") String studentId) {
         ModelAndView mv = new ModelAndView();
         mv.setViewName("studentInformation");
         mv.addObject("studentInformation", studentsService.getById(studentId));
         return mv;
     }
-    @PostMapping("/updateStudent")//更新
+    @PostMapping("/updateStudent")//更新个人信息
     public String updateStudent(@ModelAttribute Students student) {
         studentsService.updateStudent(student);
         studentsService.updateStudentClassName(student.getStudentId(), student.getStudentClass().getClassName());
         return "redirect:/students/studentInformation?studentId=" + student.getStudentId();
     }
-
+    @GetMapping("/assignmentDetails")
+    public String getAssignmentDetails(@RequestParam("studentId") String studentId,
+                                       @RequestParam(value = "subjectName", required = false) String subjectName,
+                                       Model model) {
+        System.out.println("Received studentId: " + studentId);
+        System.out.println("Received subjectName: " + subjectName);
+        List<assignmentDetails> assignmentDetailsList = studentsService.getAssignmentDetails(studentId, subjectName);
+        model.addAttribute("assignmentDetails", assignmentDetailsList);
+        model.addAttribute("studentId", studentId);
+        return "assignmentDetails";
+    }
 }

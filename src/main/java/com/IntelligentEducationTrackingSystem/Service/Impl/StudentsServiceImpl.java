@@ -3,8 +3,11 @@ package com.IntelligentEducationTrackingSystem.Service.Impl;
 import com.IntelligentEducationTrackingSystem.DAO.StudentsDao;
 import com.IntelligentEducationTrackingSystem.PO.Students;
 import com.IntelligentEducationTrackingSystem.Service.StudentsService;
+import com.IntelligentEducationTrackingSystem.pojo.assignmentDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service("StudentsService")
 public class StudentsServiceImpl implements StudentsService {
@@ -19,5 +22,8 @@ public class StudentsServiceImpl implements StudentsService {
 
     public void updateStudentClassName(String studentId, String className) {
         studentsDao.updateStudentClassName(studentId, className);
+    }
+    public List<assignmentDetails> getAssignmentDetails(String studentId, String subjectName) {
+        return studentsDao.getAssignmentDetails(studentId, subjectName);
     }
 }

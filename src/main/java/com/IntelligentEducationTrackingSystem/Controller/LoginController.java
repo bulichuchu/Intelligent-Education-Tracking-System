@@ -21,7 +21,7 @@ public class LoginController {
                         Model model) {
         if ("U001".equals(userId) && "12345".equals(userPassword)) {
             session.setAttribute("studentId", studentId);
-            return "redirect:/students/studentInformation?studentId=" + studentId;
+            return "redirect:/students/studentMenu?studentId=" + studentId;
         } else {
             model.addAttribute("error", "用户名或密码错误");
             return "login";

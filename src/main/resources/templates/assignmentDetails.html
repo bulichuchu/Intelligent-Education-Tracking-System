@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>作业详情</title>
+</head>
+<body>
+<h1>作业详情</h1>
+<form th:action="@{/students/assignmentDetails}" method="get">
+    <input type="hidden" name="studentId" th:value="${studentId}" />
+    <label for="subjectName">选择科目:</label>
+    <select name="subjectName" id="subjectName">
+        <option value="">全部</option>
+        <option value="语文">语文</option>
+        <option value="数学">数学</option>
+        <option value="英语">英语</option>
+        <option value="物理">物理</option>
+        <option value="化学">化学</option>
+        <option value="生物">生物</option>
+        <option value="历史">历史</option>
+        <option value="地理">地理</option>
+        <option value="政治">政治</option>
+        <option value="美术">美术</option>
+        <!-- 可以根据需要添加更多选项 -->
+    </select>
+    <button type="submit">筛选</button>
+</form>
+<table border="1">
+    <thead>
+    <tr>
+        <th>学科</th>
+        <th>作业名称</th>
+        <th>任课教师</th>
+        <th>发布时间</th>
+        <th>截至时间</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="assignment : ${assignmentDetails}">
+        <td th:text="${assignment.getSubjectName()}"></td>
+        <td th:text="${assignment.getAssignmentName()}"></td>
+        <td th:text="${assignment.getTeacherName()}"></td>
+        <td th:text="${assignment.getReleaseTime()}"></td>
+        <td th:text="${assignment.getDueTime()}"></td>
+    </tr>
+    </tbody>
+</table>
+</body>

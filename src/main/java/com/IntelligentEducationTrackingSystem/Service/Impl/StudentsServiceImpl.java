@@ -10,8 +10,8 @@ import org.springframework.stereotype.Service;
 public class StudentsServiceImpl implements StudentsService {
     @Autowired
     private StudentsDao studentsDao;
-    public Students getById() {
-        return studentsDao.getById("S001");
+    public Students getById(String studentId) {
+        return studentsDao.getById(studentId);
     }
     public void updateStudent(Students student) {
         studentsDao.updateStudent(student);

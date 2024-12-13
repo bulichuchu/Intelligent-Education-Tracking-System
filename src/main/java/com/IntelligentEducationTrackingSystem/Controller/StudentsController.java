@@ -40,8 +40,6 @@ public class StudentsController {
     public String getAssignmentDetails(@RequestParam("studentId") String studentId,
                                        @RequestParam(value = "subjectName", required = false) String subjectName,
                                        Model model) {
-        System.out.println("Received studentId: " + studentId);
-        System.out.println("Received subjectName: " + subjectName);
         List<assignmentDetails> assignmentDetailsList = studentsService.getAssignmentDetails(studentId, subjectName);
         model.addAttribute("assignmentDetails", assignmentDetailsList);
         model.addAttribute("studentId", studentId);

@@ -38,4 +38,5 @@ public interface StudentsDao {
             "AND (#{subjectName} IS NULL OR #{subjectName} = '' OR subjectName = #{subjectName})")
     public List<assignmentDetails> getAssignmentDetails(@Param("studentId") String studentId,
                                                           @Param("subjectName") String subjectName);
+
 }

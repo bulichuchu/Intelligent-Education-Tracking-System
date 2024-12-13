@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh">
 <head>
     <meta charset="UTF-8">
     <title>作业详情</title>
@@ -33,6 +33,8 @@
         <th>任课教师</th>
         <th>发布时间</th>
         <th>截至时间</th>
+        <th>提交状态</th>
+        <th>展开详情</th>
     </tr>
     </thead>
     <tbody>
@@ -42,7 +44,16 @@
         <td th:text="${assignment.getTeacherName()}"></td>
         <td th:text="${assignment.getReleaseTime()}"></td>
         <td th:text="${assignment.getDueTime()}"></td>
+        <td th:text="${assignment.getStatus()}"></td>
+        <td>
+            <details>
+                <summary th:text="${anyGraded ? '已批改' : '未批改'}">展开</summary>
+                <p>成绩: <span th:text="${assignment.getGrade() != null ? assignment.getGrade() : '暂无成绩'}"></span></p>
+                <p>教师评语: <span th:text="${assignment.getComment() != null ? assignment.getComment() : '暂无评语'}"></span></p>
+            </details>
+        </td>
     </tr>
     </tbody>
 </table>
 </body>
+</html>

@@ -36,13 +36,15 @@ public class StudentsController {
         studentsService.updateStudentClassName(student.getStudentId(), student.getStudentClass().getClassName());
         return "redirect:/students/studentInformation?studentId=" + student.getStudentId();
     }
-    @GetMapping("/assignmentDetails")
+    @GetMapping("/assignmentDetails")//查询作业详情
     public String getAssignmentDetails(@RequestParam("studentId") String studentId,
                                        @RequestParam(value = "subjectName", required = false) String subjectName,
                                        Model model) {
         List<assignmentDetails> assignmentDetailsList = studentsService.getAssignmentDetails(studentId, subjectName);
+        boolean anyGraded = assignmentDetailsList.stream().anyMatch(a -> (Integer)a.getGrade() != null || a.getComment() != null);
         model.addAttribute("assignmentDetails", assignmentDetailsList);
         model.addAttribute("studentId", studentId);
+        model.addAttribute("anyGraded", anyGraded);
         return "assignmentDetails";
     }
 }

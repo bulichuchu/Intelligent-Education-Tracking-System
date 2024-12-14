@@ -2,10 +2,11 @@ package com.IntelligentEducationTrackingSystem.PO;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.io.Serializable;
 
 @Entity               // 将此类标识为实体类
 @Table(name = "users") // 映射到数据库中的 user 表
-public class Users {
+public class Users implements Serializable {
     @Id // 表示此字段为主键
     private  String userId;//数据表中的 userid 列
     private String userName; // 用户名，数据表中的 username 列

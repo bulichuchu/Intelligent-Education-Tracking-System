@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>教师菜单</title>
+</head>
+<body>
+<h1>欢迎您, <span th:text="${teacherName}"></span></h1>
+<h2>请选择操作:</h2>
+<ul>
+
+    <li><a th:href="@{/teachers/createAssignment(teacherId=${teacherId})}">布置作业</a></li>
+    <li><a th:href="@{/teachers/assignments(teacherId=${teacherId})}">查看提交情况</a></li>
+    <li><a th:href="@{/teachers/gradeAssignment(teacherId=${teacherId})}">批改作业</a></li>
+    <li><a th:href="@{/teachers/learningProgress(teacherId=${teacherId})}">查看学生学习进度</a></li>
+    <li><a th:href="@{/teachers/resources(teacherId=${teacherId})}">管理学习资源</a></li>
+    <li><a th:href="@{/teachers/classSchedule(teacherId=${teacherId})}">查看课程安排</a></li>
+    <li><a th:href="@{/teachers/notifications(teacherId=${teacherId})}">发布通知</a></li>
+</ul>
+</body>
+</html>

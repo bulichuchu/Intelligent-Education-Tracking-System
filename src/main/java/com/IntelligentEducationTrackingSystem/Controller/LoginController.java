@@ -37,7 +37,7 @@ public class LoginController {
             return switch (firstLetter) {// 如果用户名以 'A' 开头，跳转到管理员界面
                 case 'A' -> "redirect:/admin/dashboard";
                 case 'T' -> {
-                    session.setAttribute("teacherID", userId);
+                    session.setAttribute("teacher", user);
                     yield "redirect:/teachers/teacherMenu?teacherID=" + userId;
                 }
                 case 'S' -> {

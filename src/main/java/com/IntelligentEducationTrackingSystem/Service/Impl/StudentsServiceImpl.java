@@ -5,6 +5,7 @@ import com.IntelligentEducationTrackingSystem.PO.ClassNotifications;
 import com.IntelligentEducationTrackingSystem.PO.Students;
 import com.IntelligentEducationTrackingSystem.Service.StudentsService;
 import com.IntelligentEducationTrackingSystem.pojo.StudentCourses;
+import com.IntelligentEducationTrackingSystem.pojo.StudentLearning;
 import com.IntelligentEducationTrackingSystem.pojo.assignmentDetails;
 import com.itextpdf.io.font.constants.StandardFonts;
 import com.itextpdf.kernel.font.PdfFont;
@@ -47,5 +48,7 @@ public class StudentsServiceImpl implements StudentsService {
     public List<StudentCourses> getStudentCourses(String studentId) {
         return studentsDao.getStudentCourses(studentId);
     }
-
+    public List<StudentLearning> getStudentLearning(String subjectName, String resourceType) {
+        return studentsDao.getStudentLearning(subjectName,resourceType);
+    }
 }

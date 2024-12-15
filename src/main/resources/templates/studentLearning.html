@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>学习资源</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $("form").on("submit", function(event) {
+                event.preventDefault();
+                $.ajax({
+                    url: $(this).attr("action"),
+                    type: $(this).attr("method"),
+                    data: $(this).serialize(),
+                    success: function(data) {
+                        $("tbody").html($(data).find("tbody").html());
+                    }
+                });
+            });
+
+            $("tbody").on("click", "tr", function() {
+                var url = $(this).data("url");
+                if (url) {
+                    $(this).css("background-color", "#f0f0f0"); // 高亮显示被点击的行
+                    setTimeout(function() {
+                        window.location.href = url;
+                    }, 200); // 延迟跳转以显示高亮效果
+                }
+            });
+        });
+    </script>
+    <style>
+        tbody tr:hover {
+            background-color: #e0e0e0; /* 鼠标悬停时的背景颜色 */
+            cursor: pointer; /* 鼠标悬停时显示手型光标 */
+        }
+    </style>
+</head>
+<body>
+<h1>学习资源</h1>
+
+<form method="get" action="/students/studentLearning">
+    <label for="subjectName">科目名称:</label>
+    <select id="subjectName" name="subjectName">
+        <option value="">全部</option>
+        <option value="语文">语文</option>
+        <option value="数学">数学</option>
+        <option value="英语">英语</option>
+        <option value="物理">物理</option>
+        <option value="化学">化学</option>
+        <option value="生物">生物</option>
+        <option value="历史">历史</option>
+        <option value="地理">地理</option>
+        <option value="政治">政治</option>
+        <option value="美术">美术</option>
+        <!-- 你可以根据需要添加更多选项 -->
+    </select>
+    <label for="resourceType">资源类型:</label>
+    <select id="resourceType" name="resourceType">
+        <option value="">全部</option>
+        <option value="视频">视频</option>
+        <option value="文档">文档</option>
+        <option value="音频">音频</option>
+        <option value="图片">图片</option>
+        <!-- 你可以根据需要添加更多选项 -->
+    </select>
+    <button type="submit">筛选</button>
+</form>
+
+<table border="1">
+    <thead>
+    <tr>
+        <th>学习课程名称</th>
+        <th>类型</th>
+        <th>科目</th>
+        <th>上传教师</th>
+        <th>上传时间</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="resource : ${studentLearning}" th:data-url="${resource.url}">
+        <td th:text="${resource.resourceName}"></td>
+        <td th:text="${resource.resourceType}"></td>
+        <td th:text="${resource.subjectName}"></td>
+        <td th:text="${resource.teacherName}"></td>
+        <td th:text="${resource.uploadTime}"></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

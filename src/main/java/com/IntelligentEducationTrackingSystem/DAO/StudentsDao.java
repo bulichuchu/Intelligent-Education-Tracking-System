@@ -5,6 +5,7 @@ import com.IntelligentEducationTrackingSystem.PO.ClassNotifications;
 import com.IntelligentEducationTrackingSystem.PO.Students;
 
 import com.IntelligentEducationTrackingSystem.pojo.StudentCourses;
+import com.IntelligentEducationTrackingSystem.pojo.StudentLearning;
 import com.IntelligentEducationTrackingSystem.pojo.assignmentDetails;
 import org.apache.ibatis.annotations.*;
 
@@ -49,4 +50,7 @@ public interface StudentsDao {
     //查询课程
     @Select("SELECT * FROM StudentCourses WHERE studentId = #{studentId}")
     public List<StudentCourses> getStudentCourses(@Param("studentId") String studentId);
+    //浏览学习资源
+    @Select("SELECT * FROM StudentLearning WHERE (#{subjectName} ='' OR subjectName = #{subjectName}) AND (#{resourceType} ='' OR resourceType = #{resourceType})")
+    public List<StudentLearning> getStudentLearning(@Param("subjectName") String subjectName, @Param("resourceType") String resourceType);
 }

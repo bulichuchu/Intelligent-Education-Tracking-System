@@ -3,6 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <title>作业详情</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $("form").on("submit", function(event) {
+                event.preventDefault();
+                $.ajax({
+                    url: $(this).attr("action"),
+                    type: $(this).attr("method"),
+                    data: $(this).serialize(),
+                    success: function(data) {
+                        $("tbody").html($(data).find("tbody").html());
+                    }
+                });
+            });
+        });
+    </script>
 </head>
 <body>
 <h1>作业详情</h1>

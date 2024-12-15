@@ -66,5 +66,11 @@ public class StudentsController {
         model.addAttribute("studentId", studentId);
         return "studentCourses";
     }
-
+    @GetMapping("/studentLearning")//查询学习资料
+    public String getStudentLearning(@RequestParam(value = "subjectName", required = false,defaultValue = "") String subjectName,
+                                     @RequestParam(value = "resourceType", required = false,defaultValue = "") String resourceType,
+                                     Model model) {
+        model.addAttribute("studentLearning", studentsService.getStudentLearning(subjectName,resourceType));
+        return "studentLearning";
+    }
 }

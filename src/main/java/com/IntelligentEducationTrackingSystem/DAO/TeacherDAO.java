@@ -1,6 +1,8 @@
 package com.IntelligentEducationTrackingSystem.DAO;
 
 import com.IntelligentEducationTrackingSystem.PO.Assignments;
+import com.IntelligentEducationTrackingSystem.PO.SubmissionStatus;
+import com.IntelligentEducationTrackingSystem.pojo.SubmissionDetails;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
@@ -49,4 +51,36 @@ public interface TeacherDAO {
     // 删除作业信息
     @Delete("DELETE FROM assignments WHERE assignmentId = #{assignmentId}")
     void deleteAssignment(String assignmentId);
+
+
+    @Select("SELECT ss.submissionStatusId, ss.assignmentId, ss.studentId, ss.submissionTime, ss.status, " +
+            "s.studentName, a.assignmentName, c.className " +
+            "FROM submissionstatus ss " +
+            "JOIN students s ON ss.studentId = s.studentId " +
+            "JOIN assignments a ON ss.assignmentId = a.assignmentId " +
+            "JOIN classes c ON s.classId = c.classId " +
+            "WHERE a.teacherId = #{teacherId} " +
+            "AND (#{assignmentId} IS NULL OR #{assignmentId} = '' OR ss.assignmentId = #{assignmentId}) " +
+            "AND (#{className} IS NULL OR #{className} = '' OR c.className = #{className})")
+    @Results({
+            @Result(property = "submissionStatusId", column = "submissionStatusId"),
+            @Result(property = "assignmentId", column = "assignmentId"),
+            @Result(property = "studentId", column = "studentId"),
+            @Result(property = "submissionTime", column = "submissionTime"),
+            @Result(property = "status", column = "status"),
+            @Result(property = "studentName", column = "studentName"),
+            @Result(property = "assignmentName", column = "assignmentName"),
+            @Result(property = "className", column = "className")
+    })
+    List<SubmissionDetails> getSubmissionsByTeacher(@Param("teacherId") String teacherId,
+                                                    @Param("assignmentId") String assignmentId,
+                                                    @Param("className") String className);
+
+    @Select("SELECT DISTINCT c.className FROM classes c " +
+            "JOIN classes tc ON c.classId = tc.classId " +
+            "WHERE tc.teacherId = #{teacherId}")
+    List<String> getTeacherClasses(String teacherId);
+
+    @Select("SELECT * FROM assignments WHERE teacherId = #{teacherId}")
+    List<Assignments> getTeacherAssignments(String teacherId);
 }

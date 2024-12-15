@@ -3,7 +3,10 @@ package com.IntelligentEducationTrackingSystem.Controller;
 import com.IntelligentEducationTrackingSystem.DAO.TeacherDAO;
 import com.IntelligentEducationTrackingSystem.PO.Assignments;
 import com.IntelligentEducationTrackingSystem.PO.Subjects;
+import com.IntelligentEducationTrackingSystem.PO.SubmissionStatus;
 import com.IntelligentEducationTrackingSystem.PO.Users;
+import com.IntelligentEducationTrackingSystem.Service.TeacherService;
+import com.IntelligentEducationTrackingSystem.pojo.SubmissionDetails;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,17 +16,17 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.security.auth.Subject;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 @Controller
 @RequestMapping("/teachers")
 public class TeacherController {
     @Autowired
     private TeacherDAO teacherDAO;
+    @Autowired
+    private TeacherService teacherService;
 
     @GetMapping("/teacherMenu")//菜单
     public String showStudentMenu(HttpSession session, Model model) {
@@ -119,10 +122,29 @@ public class TeacherController {
 
 
     @GetMapping("/assignments")
-    public String viewAssignments(Model model) {
-        // 查询作业列表并添加到模型中
-//        model.addAttribute("assignments", assignmentService.getAllAssignments());
-        return "viewAssignments"; // 查看提交情况页面
+    public String checkSubmissions(@RequestParam("teacherId") String teacherId,
+                                   @RequestParam(value = "assignmentId", required = false) String assignmentId,
+                                   @RequestParam(value = "className", required = false) String className,
+                                   Model model) {
+
+        List<SubmissionDetails> submissions = teacherService.getSubmissionsByTeacher(teacherId, assignmentId, className);
+        List<String> teacherClasses = teacherService.getTeacherClasses(teacherId);
+        List<Assignments> teacherAssignments = teacherService.getTeacherAssignments(teacherId);
+
+        model.addAttribute("submissions", submissions);
+        model.addAttribute("teacherId", teacherId);
+        model.addAttribute("classes", teacherClasses);
+        model.addAttribute("assignments", teacherAssignments);
+        int totalSubmissions = submissions.size();
+        int submittedCount = (int) submissions.stream().filter(s -> "已提交".equals(s.getStatus().strip())).count();
+        int notSubmittedCount = totalSubmissions - submittedCount;
+        double submissionRate = totalSubmissions == 0 ? 0 : (submittedCount * 1.0 / totalSubmissions);
+
+        model.addAttribute("submittedCount", submittedCount);
+        model.addAttribute("notSubmittedCount", notSubmittedCount);
+        model.addAttribute("submissionRate", submissionRate);
+
+        return "assignments";
     }
 
     @GetMapping("/gradeAssignment")

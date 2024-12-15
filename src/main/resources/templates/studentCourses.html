@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>课程信息</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+<h1>课程信息</h1>
+<table border="1" id="courseTable">
+    <thead>
+    <tr>
+        <th>课程名称</th>
+        <th>教师姓名</th>
+        <th>教师邮箱</th>
+        <th>教师电话</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="course : ${studentCourses}">
+        <td th:text="${course.courseName}"></td>
+        <td th:text="${course.teacherName}"></td>
+        <td th:text="${course.teacherEmail}"></td>
+        <td th:text="${course.teacherPhone}"></td>
+    </tr>
+    </tbody>
+</table>
+<br>
+<button type="button" onclick="generatePDF()">导出 PDF</button>
+
+<script>
+    async function generatePDF() {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+
+        // 使用 html2canvas 将 HTML 转换为图片
+        const element = document.getElementById('courseTable');
+        const canvas = await html2canvas(element);
+        const imgData = canvas.toDataURL('image/png');
+
+        // 将图片添加到 PDF
+        const imgProps = doc.getImageProperties(imgData);
+        const pdfWidth = doc.internal.pageSize.getWidth();
+        const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+
+        doc.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+        doc.save('student_courses.pdf');
+    }
+</script>
+</body>
+</html>

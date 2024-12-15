@@ -6,9 +6,12 @@
 <body>
 <h1><span th:text="${studentName}"></span></h1>
 <ul>
-    <li><a th:href="@{/students/studentInformation(studentId=${studentId})}">我的信息</a></li>
+    <li><a th:href="@{/students/studentInformation}">我的信息</a></li>
+    <li><a th:href="@{/students/classNotifications}">查看通知</a></li>
     <li><a th:href="@{/students/assignmentDetails(studentId=${studentId})}">我的作业</a></li>
-    <li><a th:href="@{/students/myResources(studentId=${studentId})}">我的学习资源</a></li>
+    <li><a th:href="@{/students/studentCourses}">课程安排</a></li>
+    <li><a th:href="@{/students/myCourses}">学习资源</a></li>
+    <li><a th:href="@{/students/myGrades}">错题集</a></li>
 </ul>
 </body>
 </html>

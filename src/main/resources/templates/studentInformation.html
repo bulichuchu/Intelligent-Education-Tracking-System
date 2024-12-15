@@ -10,7 +10,7 @@
 </head>
 <body>
 <h1>学生信息</h1>
-<form th:action="@{/students/updateStudent}" th:object="${studentInformation}" method="post" onsubmit="showSuccessMessage()">
+<form th:action="@{/students/updateStudent}" th:object="${studentInformation}" method="get" onsubmit="showSuccessMessage()">
   <p>学号: <input type="text" th:field="*{studentId}" readonly="true" /></p>
   <p>姓名: <input type="text" th:field="*{studentName}" /></p>
   <p>班级名称: <input type="text" th:field="*{studentClass.className}" /></p>

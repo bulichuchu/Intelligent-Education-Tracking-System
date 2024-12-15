@@ -15,7 +15,7 @@ public class assignmentDetails {
     private String studentName; // 对应数据表中的 studentname 列，存储学生姓名
     private String subjectName; // 对应数据表中的 subjectname 列，存储学科名称
     private String comment; // 教师的评语内容，对应数据表中的 comment 列
-    private int grade; // 对应数据表中的 grade 列，存储学生此次作业获得的成绩
+    private Double grade; // 对应数据表中的 grade 列，存储学生此次作业获得的成绩
     private String status; // 对应数据表中的 status 列，例如 "已提交"、"未提交" 等状态描述
 
     public String getStatus() {
@@ -34,11 +34,11 @@ public class assignmentDetails {
         this.comment = comment;
     }
 
-    public int getGrade() {
+    public Double getGrade() {
         return grade;
     }
 
-    public void setGrade(int grade) {
+    public void setGrade(Double grade) {
         this.grade = grade;
     }
 

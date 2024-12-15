@@ -1,8 +1,10 @@
 package com.IntelligentEducationTrackingSystem.DAO;
 
 import com.IntelligentEducationTrackingSystem.PO.Assignments;
+import com.IntelligentEducationTrackingSystem.PO.ClassNotifications;
 import com.IntelligentEducationTrackingSystem.PO.Students;
 
+import com.IntelligentEducationTrackingSystem.pojo.StudentCourses;
 import com.IntelligentEducationTrackingSystem.pojo.assignmentDetails;
 import org.apache.ibatis.annotations.*;
 
@@ -38,5 +40,13 @@ public interface StudentsDao {
             "AND (#{subjectName} IS NULL OR #{subjectName} = '' OR subjectName = #{subjectName})")
     public List<assignmentDetails> getAssignmentDetails(@Param("studentId") String studentId,
                                                           @Param("subjectName") String subjectName);
+    //查看通知
+    @Select("SELECT cn.* FROM classnotifications cn " +
+            "JOIN students s ON cn.classId = s.classId " +
+            "WHERE s.studentId = #{studentId}")
+    public List<ClassNotifications> getClassNotifications(@Param("studentId") String studentId);
 
+    //查询课程
+    @Select("SELECT * FROM StudentCourses WHERE studentId = #{studentId}")
+    public List<StudentCourses> getStudentCourses(@Param("studentId") String studentId);
 }

@@ -21,6 +21,7 @@
     </script>
 </head>
 <body>
+<div th:replace="~{studentMenu :: body}"></div>
 <h1>作业详情</h1>
 <form th:action="@{/students/assignmentDetails}" method="get">
     <input type="hidden" name="studentId" th:value="${studentId}" />

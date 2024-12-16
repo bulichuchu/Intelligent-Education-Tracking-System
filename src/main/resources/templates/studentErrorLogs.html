@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>错题集</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        function saveChanges(button) {
+            var errorLogId = $(button).data("errorlogid");
+            var errorAnswer = $("#errorAnswer_" + errorLogId).val();
+            var errorQuestion = $("#errorQuestion_" + errorLogId).val();
+            var correctAnswer = $("#correctAnswer_" + errorLogId).val();
+
+            $.ajax({
+                url: '/students/updateErrorLog',
+                type: 'POST',
+                data: JSON.stringify({
+                    errorLogId: errorLogId,
+                    errorAnswer: errorAnswer,
+                    errorQuestion: errorQuestion,
+                    correctAnswer: correctAnswer
+                }),
+                contentType: 'application/json',
+                success: function(response) {
+                    alert('更新成功');
+                },
+                error: function(error) {
+                    alert('更新失败');
+                }
+            });
+        }
+
+        function deleteErrorLog(button) {
+            var errorLogId = $(button).data("errorlogid");
+
+            $.ajax({
+                url: '/students/deleteErrorLog',
+                type: 'POST',
+                data: JSON.stringify({ errorLogId: errorLogId }),
+                contentType: 'application/json',
+                success: function(response) {
+                    alert('删除成功');
+                    location.reload(); // 刷新页面以更新表格
+                },
+                error: function(error) {
+                    alert('删除失败');
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+<div th:replace="~{studentMenu :: body}"></div>
+<h1>错题集</h1>
+
+<table border="1">
+    <thead>
+    <tr>
+        <th>作业编号</th>
+        <th>作业名称</th>
+        <th>错误答案</th>
+        <th>错误原因</th>
+        <th>正确答案</th>
+        <th>操作</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="errorLog : ${studentErrorLogs}">
+        <td th:text="${errorLog.assignmentId}"></td>
+        <td th:text="${errorLog.assignmentName}"></td>
+        <td><input type="text" th:id="'errorAnswer_' + ${errorLog.errorLogId}" th:value="${errorLog.errorAnswer}"/></td>
+        <td><input type="text" th:id="'errorQuestion_' + ${errorLog.errorLogId}" th:value="${errorLog.errorQuestion}"/></td>
+        <td><input type="text" th:id="'correctAnswer_' + ${errorLog.errorLogId}" th:value="${errorLog.correctAnswer}"/></td>
+        <td>
+            <button type="button" th:data-errorLogId="${errorLog.errorLogId}" onclick="saveChanges(this)">保存</button>
+            <button type="button" th:data-errorLogId="${errorLog.errorLogId}" onclick="deleteErrorLog(this)">删除</button>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<button type="button" th:data-student-id="${session.studentId}" onclick="redirectToAddErrorLogPage(this)">添加错题</button>
+
+<script>
+    function redirectToAddErrorLogPage(button) {
+        var studentId = button.getAttribute("data-student-id");
+        window.location.href = '/students/addErrorLogPage?studentId=' + studentId;
+    }
+</script>
+</body>
+</html>

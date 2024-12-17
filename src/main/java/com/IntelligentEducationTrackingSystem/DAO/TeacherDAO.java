@@ -2,6 +2,7 @@ package com.IntelligentEducationTrackingSystem.DAO;
 
 import com.IntelligentEducationTrackingSystem.PO.Assignments;
 import com.IntelligentEducationTrackingSystem.PO.SubmissionStatus;
+import com.IntelligentEducationTrackingSystem.PO.TeacherComments;
 import com.IntelligentEducationTrackingSystem.pojo.SubmissionDetails;
 import org.apache.ibatis.annotations.*;
 
@@ -83,4 +84,97 @@ public interface TeacherDAO {
 
     @Select("SELECT * FROM assignments WHERE teacherId = #{teacherId}")
     List<Assignments> getTeacherAssignments(String teacherId);
+
+    @Select("""
+            SELECT ss.submissionstatusid, ss.assignmentid, ss.studentid, 
+                   ss.submissiontime, ss.status, s.studentname, 
+                   a.assignmentname, c.classname
+            FROM submissionstatus ss
+            JOIN students s ON ss.studentid = s.studentid
+            JOIN assignments a ON ss.assignmentid = a.assignmentid
+            JOIN classes c ON s.classid = c.classid
+            WHERE ss.assignmentid = #{assignmentId}
+            """)
+    List<SubmissionDetails> getSubmissionsByAssignmentId(String assignmentId);
+
+    @Insert("""
+            INSERT INTO teachercomments (commentid, studentid, assignmentid, 
+                                       comment, commenttime)
+            VALUES (#{commentId}, #{studentId}, #{assignmentId}, 
+                   #{comment}, #{commentTime})
+            """)
+    void saveTeacherComment(TeacherComments comment);
+
+    @Insert("""
+    INSERT INTO assignmentgrades (
+        gradeID, 
+        assignmentid, 
+        studentid, 
+        grade, 
+        teacherID, 
+        gradingTime
+    ) VALUES (
+        #{gradeId}, 
+        #{assignmentId}, 
+        #{studentId}, 
+        #{grade}, 
+        #{teacherId}, 
+        CURRENT_TIMESTAMP
+    )
+""")
+    void insertAssignmentGrade(@Param("gradeId") String gradeId,
+                               @Param("assignmentId") String assignmentId,
+                               @Param("studentId") String studentId,
+                               @Param("grade") int grade,
+                               @Param("teacherId") String teacherId);
+    @Select("""
+    SELECT a.assignmentid 
+    FROM assignments a 
+    JOIN submissionstatus s ON a.assignmentid = s.assignmentid 
+    WHERE s.studentid = #{studentId} 
+    AND s.status = '已提交' 
+    AND NOT EXISTS (
+        SELECT 1 FROM teachercomments tc 
+        WHERE tc.studentid = s.studentid 
+        AND tc.assignmentid = s.assignmentid
+    )
+    ORDER BY a.releasetime DESC 
+    LIMIT 1
+""")
+    String getLatestAssignmentForStudent(@Param("studentId") String studentId);
+    @Select("""
+    SELECT DISTINCT s.studentId 
+    FROM students s 
+    JOIN classes c ON s.classId = c.classId 
+    JOIN teaching tc ON c.classId = tc.classId 
+    WHERE tc.teacherId = #{teacherId}
+""")
+    List<String> getStudentsByTeacher(String teacherId);
+
+    @Insert("""
+    INSERT INTO submissionstatus (
+        submissionstatusid, 
+        assignmentid, 
+        studentid, 
+        status
+    ) VALUES (
+        #{submissionStatusId}, 
+        #{assignmentId}, 
+        #{studentId}, 
+        #{status}
+    )
+""")
+    void insertSubmissionStatus(SubmissionStatus status);
+
+    @Update("""
+    UPDATE submissionstatus 
+    SET status = #{status}, 
+        submissionTime = CURRENT_TIMESTAMP 
+    WHERE studentId = #{studentId} 
+    AND assignmentId = #{assignmentId}
+""")
+    void updateSubmissionStatus(@Param("studentId") String studentId,
+                                @Param("assignmentId") String assignmentId,
+                                @Param("status") String status);
+
 }

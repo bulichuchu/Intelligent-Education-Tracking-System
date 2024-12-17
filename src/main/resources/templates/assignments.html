@@ -48,12 +48,6 @@
         <td th:text="${submission.assignmentName}"></td>
         <td th:text="${submission.submissionTime}"></td>
         <td th:text="${submission.status}"></td>
-        <td>
-            <a th:if="${submission.status == '已提交'}"
-               th:href="@{/teachers/viewSubmission(submissionId=${submission.submissionStatusId})}">
-                查看作业
-            </a>
-        </td>
     </tr>
     </tbody>
 </table>

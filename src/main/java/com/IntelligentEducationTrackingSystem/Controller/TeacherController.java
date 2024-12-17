@@ -15,10 +15,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/teachers")
@@ -102,14 +104,14 @@ public class TeacherController {
             Date releaseDate = dateFormat.parse(releaseTime);
             Date dueDate = dateFormat.parse(dueTime);
 
-            teacherDAO.insertAssignment(new Assignments(
+            teacherService.addAssignment(
                     assignmentId,
                     assignmentName,
                     subjectId,
                     teacherId,
                     releaseDate,
                     dueDate
-            ));
+            );
 
             return "redirect:/teachers/createAssignment?teacherId=" + teacherId;
         } catch (Exception e) {
@@ -148,8 +150,56 @@ public class TeacherController {
     }
 
     @GetMapping("/gradeAssignment")
-    public String gradeAssignmentForm() {
-        return "gradeAssignment"; // 批改作业页面
+    public String gradeAssignmentForm(@RequestParam("teacherId") String teacherId,
+                                      @RequestParam(value = "assignmentId", required = false) String assignmentId,
+                                      Model model) {
+        // 获取该教师的所有作业
+        List<Assignments> teacherAssignments = teacherService.getTeacherAssignments(teacherId);
+        model.addAttribute("assignments", teacherAssignments);
+
+        // 如果指定了作业ID，获取该作业的所有提交情况
+        if (assignmentId != null) {
+            List<SubmissionDetails> submissions = teacherService.getSubmissionsByAssignment(assignmentId);
+            model.addAttribute("submissions", submissions);
+        }
+
+        model.addAttribute("teacherId", teacherId);
+        return "gradeAssignment";
+    }
+
+    @PostMapping("/submitGrade")
+    public String submitGrade(@RequestParam("teacherId") String teacherId,
+                              @RequestParam("studentId") String studentId,
+                              @RequestParam("assignmentId") String assignmentId,
+                              @RequestParam("grade") int grade,
+                              @RequestParam("comment") String comment,
+                              RedirectAttributes redirectAttributes) {
+        try {
+            teacherService.gradeAssignment(studentId, assignmentId, grade, comment,teacherId);
+            redirectAttributes.addFlashAttribute("successMessage", "评分提交成功！");
+            return "redirect:/teachers/gradeAssignment?teacherId=" + teacherId + "&assignmentId=" + assignmentId;
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "评分提交失败：" + e.getMessage());
+            return "redirect:/teachers/gradeAssignment?teacherId=" + teacherId + "&assignmentId=" + assignmentId;
+        }
+    }
+
+    @PostMapping("/scanCode")
+    public String handleScanCode(@RequestParam("qrCode") String qrCode,
+                                 @RequestParam("teacherId") String teacherId,
+                                 @RequestParam("assignmentId") String assignmentId,
+                                 RedirectAttributes redirectAttributes) {
+        try {
+
+            // 更新作业提交状态
+            teacherService.updateSubmissionStatus(qrCode, assignmentId, "已提交");
+
+            redirectAttributes.addFlashAttribute("successMessage", "扫描成功并更新状态！");
+            return "redirect:/teachers/gradeAssignment?teacherId=" + teacherId + "&assignmentId=" + assignmentId;
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "扫描失败：" + e.getMessage());
+            return "redirect:/teachers/gradeAssignment?teacherId=" + teacherId;
+        }
     }
 
     @GetMapping("/learningProgress")

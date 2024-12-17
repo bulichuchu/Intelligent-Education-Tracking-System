@@ -47,6 +47,10 @@ public class StudentsServiceImpl implements StudentsService {
     public List<assignmentDetails> getAssignmentDetails(String studentId, String subjectName) {
         return studentsDao.getAssignmentDetails(studentId, subjectName);
     }
+    public void updateAssignment(String studentId, String assignmentId, String filePath) {
+        studentsDao.updateAssignmentgrades(assignmentId, filePath, studentId);
+        studentsDao.updateSubmissionstatus(studentId, assignmentId);
+    }
     public List<ClassNotifications> getClassNotifications(String studentId) {
         return studentsDao.getClassNotifications(studentId);
     }

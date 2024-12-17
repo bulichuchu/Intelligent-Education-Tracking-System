@@ -16,6 +16,7 @@ public interface StudentsService{
     public void updateStudentClassName(String studentId, String className);
     public String findAssignmentNameByAssignmentId(String assignmentId);
     public List<assignmentDetails> getAssignmentDetails(String studentId, String subjectName);
+    public void updateAssignment(String studentId, String assignmentId, String filePath);
     public List<ClassNotifications> getClassNotifications(String studentId);
     public List<StudentCourses> getStudentCourses(String studentId);
     public List<StudentLearning> getStudentLearning(String subjectName,String resourceType);

@@ -48,6 +48,13 @@ public interface StudentsDao {
             "AND (#{subjectName} IS NULL OR #{subjectName} = '' OR subjectName = #{subjectName})")
     public List<assignmentDetails> getAssignmentDetails(@Param("studentId") String studentId,
                                                           @Param("subjectName") String subjectName);
+    // 更新 assignmentgrades 表
+    @Update("UPDATE assignmentgrades SET path=#{filePath} WHERE assignmentId=#{assignmentId} AND studentId=#{studentId}")
+    void updateAssignmentgrades(@Param("assignmentId") String assignmentId, @Param("filePath") String filePath, @Param("studentId") String studentId);
+
+    // 更新 submissionstatus 表
+    @Update("UPDATE submissionstatus SET status=N'已提交', submissionTime=GETDATE() WHERE studentId=#{studentId} AND assignmentId=#{assignmentId}")
+    void updateSubmissionstatus(@Param("studentId") String studentId, @Param("assignmentId") String assignmentId);
     //查看通知
     @Select("SELECT cn.* FROM classnotifications cn " +
             "JOIN students s ON cn.classId = s.classId " +

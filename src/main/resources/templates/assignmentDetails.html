@@ -6,7 +6,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function() {
-            $("form").on("submit", function(event) {
+            $("#filterForm").on("submit", function(event) {
                 event.preventDefault();
                 $.ajax({
                     url: $(this).attr("action"),
@@ -17,13 +17,33 @@
                     }
                 });
             });
+
+            $("#uploadForm").on("submit", function(event) {
+                event.preventDefault();
+                var formData = new FormData(this);
+                $.ajax({
+                    url: $(this).attr("action"),
+                    type: $(this).attr("method"),
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(data) {
+                        alert('上传成功');
+                    },
+                    error: function() {
+                        alert('上传失败');
+                    }
+                });
+            });
         });
     </script>
 </head>
 <body>
 <div th:replace="~{studentMenu :: body}"></div>
 <h1>作业详情</h1>
-<form th:action="@{/students/assignmentDetails}" method="get">
+
+<!-- 筛选科目表单 -->
+<form id="filterForm" th:action="@{/students/assignmentDetails}" method="get">
     <input type="hidden" name="studentId" th:value="${studentId}" />
     <label for="subjectName">选择科目:</label>
     <select name="subjectName" id="subjectName">
@@ -42,6 +62,18 @@
     </select>
     <button type="submit">筛选</button>
 </form>
+
+<!-- 上传作业表单 -->
+<form id="uploadForm" th:action="@{/students/uploadAssignment}" method="post" enctype="multipart/form-data">
+    <input type="hidden" name="studentId" th:value="${studentId}" />
+    <label for="assignmentId">选择作业:</label>
+    <select name="assignmentId" id="assignmentId">
+        <option th:each="assignment : ${assignmentDetails}" th:value="${assignment.assignmentId}" th:text="${assignment.assignmentName}"></option>
+    </select>
+    <input type="file" name="file" />
+    <button type="submit">上传作业</button>
+</form>
+
 <table border="1">
     <thead>
     <tr>
@@ -64,7 +96,7 @@
         <td th:text="${assignment.getStatus()}"></td>
         <td>
             <details>
-                <summary th:text="${anyGraded ? '已批改' : '未批改'}">展开</summary>
+                <summary th:text="${anyGraded != null && anyGraded ? '已批改' : '未批改'}">展开</summary>
                 <p>成绩: <span th:text="${assignment.getGrade() != null ? assignment.getGrade() : '暂无成绩'}"></span></p>
                 <p>教师评语: <span th:text="${assignment.getComment() != '' ? assignment.getComment() : '暂无评语'}"></span></p>
             </details>

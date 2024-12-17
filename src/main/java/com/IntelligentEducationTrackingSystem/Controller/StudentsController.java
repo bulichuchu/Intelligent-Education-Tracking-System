@@ -11,10 +11,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -56,10 +58,30 @@ public class StudentsController {
                                        Model model) {
         List<assignmentDetails> assignmentDetailsList = studentsService.getAssignmentDetails(studentId, subjectName);
         boolean anyGraded = assignmentDetailsList.stream().anyMatch(a -> a.getGrade() != null || (a.getComment() != null && !a.getComment().isEmpty()));
-        setStudentName(studentId,model);
+        setStudentName(studentId, model);
         model.addAttribute("assignmentDetails", assignmentDetailsList);
         model.addAttribute("studentId", studentId);
         model.addAttribute("anyGraded", anyGraded);
+        return "assignmentDetails";
+    }
+    @PostMapping("/uploadAssignment")//上传作业
+    public String uploadAssignment(@RequestParam("file") MultipartFile file, @RequestParam("studentId") String studentId, @RequestParam("assignmentId") String assignmentId, Model model) {
+        if (!file.isEmpty()) {
+            try {
+                // 保存文件到本地
+                String filePath = new File("src/main/resources/uploads/" + file.getOriginalFilename()).getAbsolutePath();
+                file.transferTo(new File(filePath));
+
+                // 更新数据库中的path和status字段
+                studentsService.updateAssignment(studentId, assignmentId, filePath);
+
+                // 获取更新后的作业详情
+                List<assignmentDetails> assignmentDetails = studentsService.getAssignmentDetails(studentId, null);
+                model.addAttribute("assignmentDetails", assignmentDetails);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         return "assignmentDetails";
     }
     @GetMapping("/classNotifications")//查询班级通知

@@ -1,8 +1,10 @@
 package com.IntelligentEducationTrackingSystem.DAO;
 
 import com.IntelligentEducationTrackingSystem.PO.Assignments;
+import com.IntelligentEducationTrackingSystem.PO.StudentLearningProgress;
 import com.IntelligentEducationTrackingSystem.PO.SubmissionStatus;
 import com.IntelligentEducationTrackingSystem.PO.TeacherComments;
+import com.IntelligentEducationTrackingSystem.pojo.StudentProgressDetail;
 import com.IntelligentEducationTrackingSystem.pojo.SubmissionDetails;
 import org.apache.ibatis.annotations.*;
 
@@ -177,4 +179,29 @@ public interface TeacherDAO {
                                 @Param("assignmentId") String assignmentId,
                                 @Param("status") String status);
 
+
+    @Select("""
+   SELECT slp.*, s.studentName
+                       FROM studentlearningprogress slp
+                       JOIN students s ON slp.studentid = s.studentid
+                       WHERE slp.studentid IN (
+                           SELECT studentid
+                           FROM students
+                           WHERE classid = (
+                               SELECT classid
+                               FROM teaching
+                               WHERE teacherid = #{teacherId}
+                           )
+                       );
+                       
+                     
+""")
+    @Results({
+            @Result(property = "progressId", column = "progressId"),
+            @Result(property = "studentId", column = "studentId"),
+            @Result(property = "studyDuration", column = "studyDuration"),
+            @Result(property = "completedChapters", column = "completedChapters"),
+            @Result(property = "studentName", column = "studentName"),
+    })
+    List<StudentProgressDetail> getLearningProgress(@Param("teacherId") String teacherId);
 }

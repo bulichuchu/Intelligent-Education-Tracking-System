@@ -2,9 +2,11 @@ package com.IntelligentEducationTrackingSystem.Service.Impl;
 
 import com.IntelligentEducationTrackingSystem.DAO.TeacherDAO;
 import com.IntelligentEducationTrackingSystem.PO.Assignments;
+import com.IntelligentEducationTrackingSystem.PO.StudentLearningProgress;
 import com.IntelligentEducationTrackingSystem.PO.SubmissionStatus;
 import com.IntelligentEducationTrackingSystem.PO.TeacherComments;
 import com.IntelligentEducationTrackingSystem.Service.TeacherService;
+import com.IntelligentEducationTrackingSystem.pojo.StudentProgressDetail;
 import com.IntelligentEducationTrackingSystem.pojo.SubmissionDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -107,7 +109,17 @@ public class TeacherServiceImpl implements TeacherService {
     public void updateSubmissionStatus(String studentId, String assignmentId, String status){
         teacherDAO.updateSubmissionStatus(studentId, assignmentId, status);
     }
-
+    @Override
+    public List<StudentProgressDetail> getLearningProgress(String teacherId, String subjectName) {
+        try {
+            return teacherDAO.getLearningProgress(teacherId);
+        } catch (Exception e) {
+            // 记录错误日志
+            e.printStackTrace();
+            // 返回空列表
+            return new ArrayList<>();
+        }
+    }
 
 
 }

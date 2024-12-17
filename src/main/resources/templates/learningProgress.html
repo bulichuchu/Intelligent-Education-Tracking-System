@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>学习进度查看</title>
+    <meta charset="UTF-8">
+</head>
+<body>
+<h1>学习进度查看</h1>
+
+<!--<form th:action="@{/teachers/learningProgress}" method="get">-->
+<!--    <input type="hidden" name="teacherId" th:value="${teacherId}" />-->
+<!--    -->
+<!--    <label for="subjectName">科目筛选：</label>-->
+<!--    <select name="subjectName" id="subjectName">-->
+<!--        <option value="">全部科目</option>-->
+<!--        <option value="语文">语文</option>-->
+<!--        <option value="数学">数学</option>-->
+<!--        <option value="英语">英语</option>-->
+<!--        <option value="物理">物理</option>-->
+<!--        <option value="化学">化学</option>-->
+<!--        <option value="生物">生物</option>-->
+<!--    </select>-->
+
+<!--    <button type="submit">筛选</button>-->
+<!--</form>-->
+
+<table border="1">
+    <thead>
+    <tr>
+        <th>进度ID</th>
+        <th>学生ID</th>
+        <th>学生姓名</th>
+
+        <th>学习时长(分钟)</th>
+        <th>已完成章节</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="progress : ${progressList}">
+        <td th:text="${progress.progressId}"></td>
+        <td th:text="${progress.studentId}"></td>
+        <td th:text="${progress.studentName}"></td>
+
+        <td th:text="${progress.studyDuration}"></td>
+        <td th:text="${progress.completedChapters}"></td>
+    </tr>
+    </tbody>
+</table>
+
+<a th:href="@{/teachers/teacherMenu(teacherId=${teacherId})}">返回菜单</a>
+</body>
+</html> 

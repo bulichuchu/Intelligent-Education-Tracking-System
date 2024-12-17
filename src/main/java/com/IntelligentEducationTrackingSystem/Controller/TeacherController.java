@@ -1,11 +1,9 @@
 package com.IntelligentEducationTrackingSystem.Controller;
 
 import com.IntelligentEducationTrackingSystem.DAO.TeacherDAO;
-import com.IntelligentEducationTrackingSystem.PO.Assignments;
-import com.IntelligentEducationTrackingSystem.PO.Subjects;
-import com.IntelligentEducationTrackingSystem.PO.SubmissionStatus;
-import com.IntelligentEducationTrackingSystem.PO.Users;
+import com.IntelligentEducationTrackingSystem.PO.*;
 import com.IntelligentEducationTrackingSystem.Service.TeacherService;
+import com.IntelligentEducationTrackingSystem.pojo.StudentProgressDetail;
 import com.IntelligentEducationTrackingSystem.pojo.SubmissionDetails;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -203,10 +201,15 @@ public class TeacherController {
     }
 
     @GetMapping("/learningProgress")
-    public String viewLearningProgress(Model model) {
-        // 查询学习进度并添加到模型中
-//        model.addAttribute("progressList", learningService.getAllLearningProgress());
-        return "learningProgress"; // 查看学生学习进度页面
+    public String viewLearningProgress(@RequestParam("teacherId") String teacherId,
+                                       @RequestParam(required = false) String subjectName,
+                                       Model model) {
+        List<StudentProgressDetail> progressList = teacherService.getLearningProgress(teacherId, subjectName);
+
+        model.addAttribute("progressList", progressList);
+        model.addAttribute("teacherId", teacherId);
+
+        return "learningProgress";
     }
 
     @GetMapping("/resources")

@@ -83,6 +83,6 @@ public class LearningResources {
     }
 
     public void setUrl(String url) {
-        url = url;
+        this.url = url;
     }
 }

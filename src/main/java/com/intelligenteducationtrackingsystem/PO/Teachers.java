@@ -56,11 +56,11 @@ public class Teachers {
         this.email = email;
     }
 
-    public String getTphonenumber() {
+    public String getTphoneNumber() {
         return tphoneNumber;
     }
 
-    public void setTphonenumber(String tphonenumber) {
+    public void setTphoneNumber(String tphonenumber) {
         this.tphoneNumber = tphonenumber;
     }
 }

@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="content-type" content="application/x-www-form-urlencoded">
+    <title>作业管理</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            width: 80%;
+            margin: 0 auto;
+        }
+
+        .button {
+            display: inline-block;
+            margin: 20px 0;
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .button:hover {
+            background-color: #45a049;
+        }
+
+        .form-container {
+            display: none;
+            margin-top: 20px;
+            border: 1px solid #ddd;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+        }
+
+        .form-container.active {
+            display: block;
+        }
+
+        .form-container input, .form-container select {
+            width: 100%;
+            padding: 8px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .form-container button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .form-container button:hover {
+            background-color: #45a049;
+        }
+    </style>
+    <script>
+        // 显示/隐藏新增作业表单，并设置北京时间
+        function toggleForm() {
+            const formContainer = document.getElementById("form-container");
+            formContainer.classList.toggle("active");
+
+            // 设置北京时间
+            const now = new Date();
+            const utc8Offset = 8 * 60; // UTC+8 偏移分钟数
+            // 设置为北京时间
+            now.setMinutes(now.getMinutes() + utc8Offset);
+            document.getElementById("releaseTime").value = now.toISOString().slice(0, 16);
+        }
+
+        // 表单提交前验证时间
+        function validateForm() {
+            const totalOffset = 8 * 60 ;
+
+            let releaseTime = new Date(document.getElementById('releaseTime').value);
+            let dueTime = new Date(document.getElementById('dueTime').value);
+            let now = new Date();
+
+            // 调整为北京时间
+            releaseTime.setMinutes(releaseTime.getMinutes() + totalOffset);
+            dueTime.setMinutes(dueTime.getMinutes() + totalOffset);
+            now.setMinutes(now.getMinutes() );
+
+            // 验证时间
+            if (releaseTime < now) {
+                alert('发布时间不能早于当前时间！');
+                return false;
+            }
+
+            if (dueTime <= releaseTime) {
+                alert('截止时间必须晚于发布时间！');
+                return false;
+            }
+
+            if ((dueTime - releaseTime) / (1000 * 60 * 60) < 1) {
+                alert('截止时间必须至少比发布时间晚1小时！');
+                return false;
+            }
+
+            return true;
+        }
+    </script>
+
+</head>
+<body>
+    <div class="container">
+        <h1>作业管理</h1>
+
+        <!-- 显示所有作业 -->
+        <table>
+            <thead>
+                <tr>
+                    <th>作业ID</th>
+                    <th>作业名称</th>
+                    <th>科目ID</th>
+                    <th>教师ID</th>
+                    <th>发布时间</th>
+                    <th>截止时间</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Thymeleaf 循环显示作业 -->
+                <tr th:each="assignment : ${assignments}">
+                    <td th:text="${assignment.assignmentId}"></td>
+                    <td th:text="${assignment.assignmentName}"></td>
+                    <td th:text="${assignment.subjectId}"></td>
+                    <td th:text="${assignment.teacherId}"></td>
+                    <td th:text="${#dates.format(assignment.releaseTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
+                    <td th:text="${#dates.format(assignment.dueTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- 新增作业按钮 -->
+        <a href="javascript:void(0);" class="button" onclick="toggleForm()">新增作业</a>
+
+        <!-- 新增作业表单 -->
+        <div id="form-container" class="form-container">
+            <h2>新增作业</h2>
+            <form th:action="@{/teachers/createAssignment}" method="POST" onsubmit="return validateForm()">
+                <label for="assignmentName">作业名称：</label>
+                <input type="text" id="assignmentName" name="assignmentName" placeholder="请输入作业名称" required>
+
+                <label for="subjectId">科目：</label>
+                <select id="subjectId" name="subjectId" required>
+                    <option th:each="subject : ${subjects}"
+                            th:value="${subject.subjectId}"
+                            th:text="${subject.subjectId + ' - ' + subject.subjectName}">
+                    </option>
+                </select>
+
+                <label for="teacherId">教师ID：</label>
+                <input type="text" id="teacherId" name="teacherId"
+                       th:value="${session.teacher.userId}" readonly>
+
+                <label for="releaseTime">发布时间：</label>
+                <input type="datetime-local" id="releaseTime" name="releaseTime"
+                       th:value="${#dates.format(#dates.createNow(), 'yyyy-MM-dd''T''HH:mm')}" required>
+
+                <label for="dueTime">截止时间：</label>
+                <input type="datetime-local" id="dueTime" name="dueTime" required>
+
+                <button type="submit">提交</button>
+            </form>
+        </div>
+
+        <div style="margin-top: 20px;">
+            <a th:href="@{/teachers/teacherMenu(teacherId=${teacherId})}" class="menu-btn">返回菜单</a>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>作业提交情况查看</title>
+    <meta charset="UTF-8">
+</head>
+<body>
+<h1>作业提交情况查看</h1>
+
+<form th:action="@{/teachers/assignments}" method="get">
+    <input type="hidden" name="teacherId" th:value="${teacherId}" />
+
+    <label for="className">班级筛选：</label>
+    <select name="className" id="className">
+        <option value="">全部班级</option>
+        <option th:each="class : ${classes}"
+                th:value="${class}"
+                th:text="${class}">
+        </option>
+    </select>
+
+    <label for="assignmentId">作业筛选：</label>
+    <select name="assignmentId" id="assignmentId">
+        <option value="">全部作业</option>
+        <option th:each="assignment : ${assignments}"
+                th:value="${assignment.assignmentId}"
+                th:text="${assignment.assignmentName}">
+        </option>
+    </select>
+
+    <button type="submit">筛选</button>
+</form>
+
+<table border="1">
+    <thead>
+    <tr>
+        <th>班级</th>
+        <th>学生姓名</th>
+        <th>作业名称</th>
+        <th>提交时间</th>
+        <th>提交状态</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="submission : ${submissions}">
+        <td th:text="${submission.className}"></td>
+        <td th:text="${submission.studentName}"></td>
+        <td th:text="${submission.assignmentName}"></td>
+        <td th:text="${submission.submissionTime}"></td>
+        <td th:text="${submission.status}"></td>
+    </tr>
+    </tbody>
+</table>
+
+<div>
+    <h3>统计信息</h3>
+    <p>已提交人数：<span th:text="${submittedCount}"></span></p>
+    <p>未提交人数：<span th:text="${notSubmittedCount}"></span></p>
+    <p>提交率：<span th:text="${#numbers.formatPercent(submissionRate, 1, 2)}"></span></p>
+    
+    <div th:if="${submissions != null && !submissions.isEmpty()}">
+        <h4>未提交学生名单：</h4>
+        <ul>
+            <li th:each="submission : ${submissions}" 
+                th:if="${submission.status.strip() == '未提交'}"
+                th:text="${submission.studentName}">
+            </li>
+        </ul>
+    </div>
+</div>
+
+<a th:href="@{/teachers/teacherMenu(teacherId=${teacherId})}">返回菜单</a>
+</body>
+</html>

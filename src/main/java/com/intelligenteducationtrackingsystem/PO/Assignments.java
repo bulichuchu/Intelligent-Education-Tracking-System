@@ -41,7 +41,7 @@ public class Assignments {
     }
 
     public void setAssignmentName(String assignmentName) {
-        assignmentName = assignmentName;
+        this.assignmentName = assignmentName;
     }
 
     public String getSubjectId() {

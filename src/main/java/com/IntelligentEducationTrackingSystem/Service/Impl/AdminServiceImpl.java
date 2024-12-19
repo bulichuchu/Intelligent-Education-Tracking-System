@@ -15,4 +15,16 @@ public class AdminServiceImpl implements AdminService {
     public List<Users> showAllUsers() {
         return userDAO.showAllUsers();
     }
+    public Users check(String userId) {
+        return userDAO.check(userId);
+    }
+    public void updateUsers(String userType, String userId) {
+        userDAO.updateUsers(userType, userId);
+    }
+    public void addUsers(String userId, String userName, String userPassword, String userType) {
+        userDAO.addUsers(userId,userName,userPassword,userType);
+    }
+    public void deleteUsers(String userId) {
+        userDAO.deleteUsers(userId);
+    }
 }

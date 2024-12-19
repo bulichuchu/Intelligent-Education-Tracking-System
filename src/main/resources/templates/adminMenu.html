@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>用户列表</title>
     <style>
@@ -17,44 +17,98 @@
     </style>
     <script>
         function openForm(button) {
-            document.getElementById("myForm").style.display = "block";
+            document.getElementById("Form").style.display = "block";
             var userID = button.getAttribute('data-id')
             var userName = button.getAttribute('data-name')
             var userType = button.getAttribute('data-type')
+            var userPwd = button.getAttribute('data-pwd')
             var id = document.getElementById('id')
             var name = document.getElementById('name')
             var type = document.getElementById('type')
+            var pwd = document.getElementById('pwd')
             id.value = userID
             name.value = userName
             type.value = userType
+            pwd.value = userPwd
         }
 
+        function openForm1() {
+            document.getElementById("Form1").style.display = "block";
+        }
         function closeForm() {
-            document.getElementById("myForm").style.display = "none";
+            document.getElementById("Form").style.display = "none";
+        }
+        function closeForm1() {
+            document.getElementById("Form1").style.display = "none";
+        }
+        function showSuccessMessage() {
+            alert("信息更新成功！");
         }
     </script>
 </head>
 <body>
 <h1>用户列表</h1>
+<button onclick="openForm1()">添加</button>
 <ul>
     <table>
-    <tr th:each="user : ${usersList}">
-        <td th:text="${user.getUserId()}"></td>
-        <td th:text="${user.getUserName()}"></td>
-        <td th:text="${user.getUserType()}"></td>
-        <td><button onclick="openForm(this)" th:data-id="${user.getUserId()}" th:data-name="${user.getUserName()}" th:data-type="${user.getUserType()}">修改用户类型</button></td>
-    </tr>
+        <tr>
+            <th>用户ID</th>
+            <th>用户名</th>
+            <th>用户类型</th>
+            <th>用户密码</th>
+            <th>修改</th>
+            <th>删除</th>
+        </tr>
+        <tr th:each="user : ${usersList}">
+            <td th:text="${user.getUserId()}"></td>
+            <td th:text="${user.getUserName()}"></td>
+            <td th:text="${user.getUserType()}"></td>
+            <td th:text="${user.getUserPassword()}"></td>
+            <td><button onclick="openForm(this)" th:data-id="${user.getUserId()}" th:data-name="${user.getUserName()}" th:data-type="${user.getUserType()}" th:data-pwd="${user.getUserPassword()}">修改用户类型</button></td>
+            <td>
+                <form th:action="@{/admin/deleteUsers}" method="get">
+                <input type="hidden" th:value="${user.getUserId()}" name="userId"/>
+                <button type="submit">删除</button>
+                </form>
+            </td>
+        </tr>
     </table>
-    <div class="form-popup" id="myForm">
-        <form action="/action_page.php">
+    <div class="form-popup" id="Form">
+        <form th:action="@{/admin/updateUserType}" method="get" onsubmit="showSuccessMessage()">
             <h1>mod</h1>
-            用户ID：<input id="id" type="text" readonly><br>
-            用户名：<input id="name" type="text" readonly><br>
-            用户类型：<input id="type" type="text"><br>
+            用户ID：<input id="id" type="text" name="userId" readonly><br>
+            用户名：<input id="name" type="text" name="userName" readonly><br>
+            用户密码：<input id="pwd" type="text" name="userPassword" readonly><br>
+            用户类型：<select id="type" name="userType">
+            <option value="admin">admin</option>
+            <option value="student">student</option>
+            <option value="teacher">teacher</option>
+            </select><br>
             <input type="submit" value="确认">
             <button type="button" onclick="closeForm()">取消</button>
         </form>
     </div>
+    <div class="form-popup" id="Form1">
+        <form th:action="@{/admin/addUsers}" method="get" onsubmit="showSuccessMessage1()">
+            <h1>add</h1>
+            用户ID：<input type="text" name="userId"><br>
+            用户名：<input type="text" name="userName"><br>
+            用户密码：<input type="password" name="userPassword"><br>
+            用户类型：<select name="userType">
+            <option value="admin">admin</option>
+            <option value="student">student</option>
+            <option value="teacher">teacher</option>
+            </select><br>
+            <input type="submit" value="确认">
+            <button type="button" onclick="closeForm1()">取消</button>
+        </form>
+    </div>
 </ul>
+<script th:inline="javascript">
+    var userExists = [[${userExists}]];
+    if (userExists) {
+        alert('用户已存在，请重新输入用户信息！');
+    }
+</script>
 </body>
 </html>

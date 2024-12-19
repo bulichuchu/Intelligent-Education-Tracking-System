@@ -126,14 +126,14 @@
         window.onload = startScanning;
     </script>
     <!-- 扫码区域 -->
-    <div class="scan-section">
+    <!-- <div class="scan-section">
         <h2>扫描纸质作业</h2>
         <form th:action="@{/teachers/scanCode}" method="post">
             <input type="hidden" name="teacherId" th:value="${teacherId}" />
             <input type="text" name="qrCode" placeholder="扫描二维码" />
             <button type="submit">扫描提交</button>
         </form>
-    </div>
+    </div> -->
 
     <!-- 作业选择 -->
     <div class="assignment-select">
@@ -165,14 +165,18 @@
             <tbody>
                 <tr th:each="submission : ${submissions}">
                     <td th:text="${submission.studentName}"></td>
-                    <td th:text="${#dates.format(submission.submissionTime, 'yyyy-MM-dd HH:mm:ss', 'Asia/Shanghai')}"></td>
+                    <td th:text="${#dates.format(submission.submissionTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
                     <td th:text="${submission.status}"></td>
                     <td>
-                        <button onclick="showGradeForm(this)" 
+                        <button th:if="${submission.status.strip() == '已提交'}" 
+                                onclick="showGradeForm(this)" 
                                 th:data-student-id="${submission.studentId}"
                                 th:data-student-name="${submission.studentName}">
                             批改
                         </button>
+                        <span th:if="${submission.status.strip() != '已提交'}">
+                            未提交
+                        </span>
                     </td>
                 </tr>
             </tbody>

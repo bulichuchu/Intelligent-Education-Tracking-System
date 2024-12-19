@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>用户列表</title>
+    <style>
+        table, th, td {
+            border: 1px solid black;
+        }
+        .form-popup {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            right: 15px;
+            border: 3px solid #f1f1f1;
+            z-index: 9;
+        }
+    </style>
+    <script>
+        function openForm(button) {
+            document.getElementById("myForm").style.display = "block";
+            var userID = button.getAttribute('data-id')
+            var userName = button.getAttribute('data-name')
+            var userType = button.getAttribute('data-type')
+            var id = document.getElementById('id')
+            var name = document.getElementById('name')
+            var type = document.getElementById('type')
+            id.value = userID
+            name.value = userName
+            type.value = userType
+        }
+
+        function closeForm() {
+            document.getElementById("myForm").style.display = "none";
+        }
+    </script>
+</head>
+<body>
+<h1>用户列表</h1>
+<ul>
+    <table>
+    <tr th:each="user : ${usersList}">
+        <td th:text="${user.getUserId()}"></td>
+        <td th:text="${user.getUserName()}"></td>
+        <td th:text="${user.getUserType()}"></td>
+        <td><button onclick="openForm(this)" th:data-id="${user.getUserId()}" th:data-name="${user.getUserName()}" th:data-type="${user.getUserType()}">修改用户类型</button></td>
+    </tr>
+    </table>
+    <div class="form-popup" id="myForm">
+        <form action="/action_page.php">
+            <h1>mod</h1>
+            用户ID：<input id="id" type="text" readonly><br>
+            用户名：<input id="name" type="text" readonly><br>
+            用户类型：<input id="type" type="text"><br>
+            <input type="submit" value="确认">
+            <button type="button" onclick="closeForm()">取消</button>
+        </form>
+    </div>
+</ul>
+</body>
+</html>

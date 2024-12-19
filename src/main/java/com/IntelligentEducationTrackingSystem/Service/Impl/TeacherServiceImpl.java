@@ -171,6 +171,49 @@ public class TeacherServiceImpl implements TeacherService {
     public LearningResources getResourceById(String resourceId) {
         return teacherDAO.getResourceById(resourceId);
     }
+    @Override
+    public List<Map<String, Object>> getNotificationsByTeacher(String teacherId) {
+        return teacherDAO.getNotificationsByTeacher(teacherId);
+    }
+
+    @Override
+    public void addClassNotification(String title, String content, String teacherId, String classId) {
+        // 验证该班级是否属于这个教师
+        List<Map<String, String>> teacherClasses = teacherDAO.getTeacherClassList(teacherId);
+        boolean isValidClass = teacherClasses.stream()
+                .anyMatch(c -> c.get("classId").equals(classId));
+
+        if (!isValidClass) {
+            throw new RuntimeException("无权向该班级发布通知");
+        }
+
+        ClassNotifications notification = new ClassNotifications();
+        notification.setNotificationId(UUID.randomUUID().toString().substring(0, 10));
+        notification.setNotificationTitle(title);
+        notification.setNotificationContent(content);
+        notification.setClassId(classId);
+        notification.setReleaseTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+
+        teacherDAO.insertClassNotification(notification);
+    }
+
+    @Override
+    public void deleteClassNotification(String notificationId, String teacherId) {
+        // 验证该通知是否属于教师所教班级
+        List<Map<String, Object>> teacherNotifications = getNotificationsByTeacher(teacherId);
+        boolean hasPermission = teacherNotifications.stream()
+                .anyMatch(n -> n.get("notificationId").equals(notificationId));
+
+        if (!hasPermission) {
+            throw new RuntimeException("无权删除此通知");
+        }
+        teacherDAO.deleteClassNotification(notificationId);
+    }
+
+    @Override
+    public List<Map<String, String>> getTeacherClassList(String teacherId) {
+        return teacherDAO.getTeacherClassList(teacherId);
+    }
 
 
 }

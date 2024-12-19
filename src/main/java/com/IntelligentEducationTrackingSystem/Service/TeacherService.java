@@ -26,4 +26,8 @@ public interface TeacherService {
     void updateLearningResource(LearningResources resource, String teacherId);
     List<LearningResources> getResourcesByTeacher(String teacherId, String resourceType);
     LearningResources getResourceById(String resourceId);
+    void addClassNotification(String title, String content, String teacherId, String classId);
+    List<Map<String, Object>> getNotificationsByTeacher(String teacherId);
+    List<Map<String, String>> getTeacherClassList(String teacherId);
+    void deleteClassNotification(String notificationId, String teacherId);
 }

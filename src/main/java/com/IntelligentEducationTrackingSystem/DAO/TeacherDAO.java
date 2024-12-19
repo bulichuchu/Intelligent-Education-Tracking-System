@@ -6,6 +6,7 @@ import com.IntelligentEducationTrackingSystem.pojo.SubmissionDetails;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface TeacherDAO {
@@ -240,4 +241,47 @@ public interface TeacherDAO {
 
     @Select("SELECT * FROM learningresources WHERE resourceId = #{resourceId}")
     LearningResources getResourceById(String resourceId);
+
+    @Insert("""
+    INSERT INTO classnotifications (
+        notificationId, classId, notificationTitle, 
+        notificationContent, releaseTime
+    ) VALUES (
+        #{notificationId}, #{classId}, #{notificationTitle}, 
+        #{notificationContent}, #{releaseTime}
+    )
+""")
+    void insertClassNotification(ClassNotifications notification);
+
+    @Select("""
+    SELECT cn.*, c.className 
+    FROM classnotifications cn
+    JOIN teaching t ON cn.classId = t.classId
+    JOIN classes c ON cn.classId = c.classId
+    WHERE t.teacherId = #{teacherId}
+    ORDER BY cn.releaseTime DESC
+""")
+    @Results({
+            @Result(property = "notificationId", column = "notificationId"),
+            @Result(property = "classId", column = "classId"),
+            @Result(property = "notificationTitle", column = "notificationTitle"),
+            @Result(property = "notificationContent", column = "notificationContent"),
+            @Result(property = "releaseTime", column = "releaseTime"),
+            @Result(property = "className", column = "className")
+    })
+    List<Map<String, Object>> getNotificationsByTeacher(String teacherId);
+
+    @Select("""
+    SELECT c.classId, c.className 
+    FROM classes c
+    JOIN teaching t ON c.classId = t.classId
+    WHERE t.teacherId = #{teacherId}
+""")
+    List<Map<String, String>> getTeacherClassList(String teacherId);
+
+    @Delete("DELETE FROM classnotifications WHERE notificationId = #{notificationId}")
+    void deleteClassNotification(String notificationId);
+
+    @Select("SELECT * FROM classnotifications WHERE notificationId = #{notificationId}")
+    ClassNotifications getNotificationById(String notificationId);
 }

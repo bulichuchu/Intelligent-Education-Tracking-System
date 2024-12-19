@@ -16,6 +16,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
 
 @Controller
 @RequestMapping("/teachers")
@@ -171,7 +172,7 @@ public class TeacherController {
                               RedirectAttributes redirectAttributes) {
         try {
             teacherService.gradeAssignment(studentId, assignmentId, grade, comment,teacherId);
-            redirectAttributes.addFlashAttribute("successMessage", "评分提交成功！");
+            redirectAttributes.addFlashAttribute("successMessage", "评分提交���功！");
             return "redirect:/teachers/gradeAssignment?teacherId=" + teacherId + "&assignmentId=" + assignmentId;
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", "评分提交失败：" + e.getMessage());
@@ -279,7 +280,48 @@ public class TeacherController {
     }
 
     @GetMapping("/notifications")
-    public String postNotificationForm() {
-        return "postNotification"; // 发布通知页面
+    public String showNotifications(
+            @RequestParam("teacherId") String teacherId,
+            Model model
+    ) {
+        List<Map<String, Object>> notifications = teacherService.getNotificationsByTeacher(teacherId);
+        List<Map<String, String>> classList = teacherService.getTeacherClassList(teacherId);
+
+        model.addAttribute("notifications", notifications);
+        model.addAttribute("classList", classList);
+        model.addAttribute("teacherId", teacherId);
+        return "notifications";
+    }
+
+    @PostMapping("/notifications/add")
+    public String addNotification(
+            @RequestParam("title") String title,
+            @RequestParam("content") String content,
+            @RequestParam("teacherId") String teacherId,
+            @RequestParam("classId") String classId,
+            RedirectAttributes redirectAttributes
+    ) {
+        try {
+            teacherService.addClassNotification(title, content, teacherId, classId);
+            redirectAttributes.addFlashAttribute("message", "通知发布成功");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+        }
+        return "redirect:/teachers/notifications?teacherId=" + teacherId;
+    }
+
+    @PostMapping("/notifications/delete")
+    public String deleteNotification(
+            @RequestParam("notificationId") String notificationId,
+            @RequestParam("teacherId") String teacherId,
+            RedirectAttributes redirectAttributes
+    ) {
+        try {
+            teacherService.deleteClassNotification(notificationId, teacherId);
+            redirectAttributes.addFlashAttribute("message", "通知删除成功");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+        }
+        return "redirect:/teachers/notifications?teacherId=" + teacherId;
     }
 }

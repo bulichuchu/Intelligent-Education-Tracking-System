@@ -161,7 +161,7 @@
                 </div>
                 <div class="notification-meta">
                     <span>发布时间：</span>
-                    <span th:text="${notification.releaseTime}"></span>
+                    <span th:text="${#dates.format(notification.releaseTime, 'yyyy-MM-dd HH:mm:ss')}"></span>
                     <span> | 班级：</span>
                     <span th:text="${notification.className}"></span>
                 </div>

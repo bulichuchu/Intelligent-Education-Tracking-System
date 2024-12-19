@@ -61,23 +61,21 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Override
     @Transactional
-    public void gradeAssignment(String studentId, String assignmentId, int grade, String comment,String teacherId) {
-        // 生成评语ID和成绩ID
+    public void gradeAssignment(String studentId, String assignmentId, int grade, String comment, String teacherId) {
         String commentId = UUID.randomUUID().toString().replace("-", "").substring(0, 10);
         String gradeId = UUID.randomUUID().toString().replace("-", "").substring(0, 10);
 
-        // 创建教师评语记录
         TeacherComments teacherComment = new TeacherComments();
         teacherComment.setCommentId(commentId);
         teacherComment.setStudentId(studentId);
         teacherComment.setAssignmentId(assignmentId);
         teacherComment.setComment(comment);
-        teacherComment.setCommentTime(new Date());
+        
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));
+        teacherComment.setCommentTime(calendar.getTime());
 
-        // 保存评语
         teacherDAO.saveTeacherComment(teacherComment);
-
-        // 插入成绩记录
         teacherDAO.insertAssignmentGrade(gradeId, assignmentId, studentId, grade, teacherId);
     }
 
@@ -122,16 +120,24 @@ public class TeacherServiceImpl implements TeacherService {
     @Override
     public void addLearningResource(LearningResources resource) {
         // 获取教师所教学科
-        String subjectId = teacherDAO.getSubjectIDByTeacherID(resource.getTeacherId());
-        if (subjectId == null) {
+        String teacherSubjectId = teacherDAO.getSubjectIDByTeacherID(resource.getTeacherId());
+        if (teacherSubjectId == null) {
             throw new RuntimeException("未找到教师所教学科信息");
+        }
+
+        // 验证提交的科目ID是否与教师所教科目一致
+        if (!teacherSubjectId.equals(resource.getSubjectId())) {
+            throw new RuntimeException("只能为您所教的科目添加学习资源");
         }
 
         // 设置资源信息
         resource.setResourceId(UUID.randomUUID().toString().substring(0, 10));
-        resource.setSubjectId(subjectId);
-        resource.setUploadTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-                .format(new Date()));
+        resource.setSubjectId(teacherSubjectId); // 确保使用教师所教的科目ID
+        
+        // 修改时间格式
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        dateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));
+        resource.setUploadTime(dateFormat.format(new Date()));
 
         teacherDAO.insertResource(resource);
     }
@@ -192,7 +198,10 @@ public class TeacherServiceImpl implements TeacherService {
         notification.setNotificationTitle(title);
         notification.setNotificationContent(content);
         notification.setClassId(classId);
-        notification.setReleaseTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+        
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        dateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));
+        notification.setReleaseTime(dateFormat.format(new Date()));
 
         teacherDAO.insertClassNotification(notification);
     }
@@ -211,13 +220,14 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
+    public List<Map<String, Object>> getTeacherSchedule(String teacherId) {
+        return teacherDAO.getTeacherSchedule(teacherId);
+    }
+
+    @Override
     public List<Map<String, String>> getTeacherClassList(String teacherId) {
         return teacherDAO.getTeacherClassList(teacherId);
     }
 
-    @Override
-    public List<Map<String, Object>> getTeacherSchedule(String teacherId) {
-        return teacherDAO.getTeacherSchedule(teacherId);
-    }
 
 }

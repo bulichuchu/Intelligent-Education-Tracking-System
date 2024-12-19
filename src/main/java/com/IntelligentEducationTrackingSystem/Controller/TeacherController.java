@@ -13,10 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
+import java.util.*;
 
 @Controller
 @RequestMapping("/teachers")
@@ -66,7 +63,6 @@ public class TeacherController {
 
         // 查询科目信息
         List<Subjects> subjects;
-//        List<Map<String, Object>> result = teacherDAO.getRawAssignmentData("T002");
         try {
             String subjectId = teacherDAO.getSubjectIDByTeacherID(currentTeacherId);
             String subjectName = teacherDAO.getSubjectNameBySubjectID(subjectId);
@@ -85,7 +81,6 @@ public class TeacherController {
 
     @PostMapping("/createAssignment")
     public String handleCreateAssignment(
-            @RequestParam("assignmentId") String assignmentId,
             @RequestParam("assignmentName") String assignmentName,
             @RequestParam("subjectId") String subjectId,
             @RequestParam("teacherId") String teacherId,
@@ -95,10 +90,15 @@ public class TeacherController {
             Model model
     ) {
         try {
-            // 转换日期格式
+            // 转换日期格式，使用北京时间
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+            TimeZone chinaTimeZone = TimeZone.getTimeZone("Asia/Shanghai");
+            dateFormat.setTimeZone(chinaTimeZone);
             Date releaseDate = dateFormat.parse(releaseTime);
             Date dueDate = dateFormat.parse(dueTime);
+
+            // 生成UUID作为作业ID
+            String assignmentId = UUID.randomUUID().toString().replace("-", "").substring(0, 10);
 
             teacherService.addAssignment(
                     assignmentId,
@@ -172,7 +172,7 @@ public class TeacherController {
                               RedirectAttributes redirectAttributes) {
         try {
             teacherService.gradeAssignment(studentId, assignmentId, grade, comment,teacherId);
-            redirectAttributes.addFlashAttribute("successMessage", "评分提交���功！");
+            redirectAttributes.addFlashAttribute("successMessage", "评分提交成功！");
             return "redirect:/teachers/gradeAssignment?teacherId=" + teacherId + "&assignmentId=" + assignmentId;
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", "评分提交失败：" + e.getMessage());
@@ -217,14 +217,37 @@ public class TeacherController {
             @RequestParam(required = false) String resourceType,
             Model model
     ) {
-        String subjectId = teacherDAO.getSubjectIDByTeacherID(teacherId);
-        String subjectName = teacherDAO.getSubjectNameBySubjectID(subjectId);
 
+        if (resourceType != null && resourceType.isEmpty()) {
+            resourceType = null;
+        }
         List<LearningResources> resources = teacherService.getResourcesByTeacher(teacherId, resourceType);
+        for (LearningResources resource : resources) {
+            String uploadTime = resource.getUploadTime();  // 获取资源名称字段
 
+            if (uploadTime != null && uploadTime.contains(".")) {
+                // 查找最后一个点的位置
+                int lastDotIndex = uploadTime.lastIndexOf(".");
+
+                // 如果存在点，截取字符串，去掉最后一个点及后面的内容
+                uploadTime = uploadTime.substring(0, lastDotIndex);
+
+                // 更新资源名称
+                resource.setUploadTime(uploadTime);
+            }
+        }
+        List<Subjects> subjects;
+        try {
+            String subjectId = teacherDAO.getSubjectIDByTeacherID(teacherId);
+            String subjectName = teacherDAO.getSubjectNameBySubjectID(subjectId);
+            subjects = List.of(new Subjects(subjectId, subjectName));
+        } catch (Exception e) {
+            model.addAttribute("error", "获取科目信息失败，请稍后重试。");
+            return "error"; // 返回错误页面
+        }
         model.addAttribute("resources", resources);
         model.addAttribute("teacherId", teacherId);
-        model.addAttribute("subjectName", subjectName);
+        model.addAttribute("subjects", subjects);  // 直接传递subjectId
         return "manageResources";
     }
 
@@ -234,6 +257,14 @@ public class TeacherController {
             RedirectAttributes redirectAttributes
     ) {
         try {
+            // 获取教师所教科目
+            String teacherSubjectId = teacherDAO.getSubjectIDByTeacherID(resource.getTeacherId());
+            
+            // 验证提交的科目ID是否与教师所教科目一致
+            if (!teacherSubjectId.equals(resource.getSubjectId())) {
+                throw new RuntimeException("只能为您所教的科目添加学习资源");
+            }
+            
             teacherService.addLearningResource(resource);
             redirectAttributes.addFlashAttribute("message", "资源添加成功");
         } catch (Exception e) {

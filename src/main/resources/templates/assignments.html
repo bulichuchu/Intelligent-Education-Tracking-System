@@ -57,8 +57,16 @@
     <p>已提交人数：<span th:text="${submittedCount}"></span></p>
     <p>未提交人数：<span th:text="${notSubmittedCount}"></span></p>
     <p>提交率：<span th:text="${#numbers.formatPercent(submissionRate, 1, 2)}"></span></p>
-
-
+    
+    <div th:if="${submissions != null && !submissions.isEmpty()}">
+        <h4>未提交学生名单：</h4>
+        <ul>
+            <li th:each="submission : ${submissions}" 
+                th:if="${submission.status.strip() == '未提交'}"
+                th:text="${submission.studentName}">
+            </li>
+        </ul>
+    </div>
 </div>
 
 <a th:href="@{/teachers/teacherMenu(teacherId=${teacherId})}">返回菜单</a>

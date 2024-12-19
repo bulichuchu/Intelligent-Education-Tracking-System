@@ -119,7 +119,7 @@ public interface TeacherDAO {
         #{studentId}, 
         #{grade}, 
         #{teacherId}, 
-        CURRENT_TIMESTAMP
+        DATEADD(HOUR, 8, GETUTCDATE())
     )
 """)
     void insertAssignmentGrade(@Param("gradeId") String gradeId,
@@ -169,7 +169,7 @@ public interface TeacherDAO {
     @Update("""
     UPDATE submissionstatus 
     SET status = #{status}, 
-        submissionTime = CURRENT_TIMESTAMP 
+        submissionTime = DATEADD(HOUR, 8, GETUTCDATE())
     WHERE studentId = #{studentId} 
     AND assignmentId = #{assignmentId}
 """)

@@ -165,7 +165,7 @@
             <tbody>
                 <tr th:each="submission : ${submissions}">
                     <td th:text="${submission.studentName}"></td>
-                    <td th:text="${submission.submissionTime}"></td>
+                    <td th:text="${#dates.format(submission.submissionTime, 'yyyy-MM-dd HH:mm:ss', 'Asia/Shanghai')}"></td>
                     <td th:text="${submission.status}"></td>
                     <td>
                         <button onclick="showGradeForm(this)" 
@@ -209,5 +209,8 @@
             document.getElementById('gradeForm').style.display = 'block';
         }
     </script>
+    <div style="margin-top: 20px;">
+        <a th:href="@{/teachers/teacherMenu(teacherId=${teacherId})}" class="menu-btn">返回菜单</a>
+    </div>
 </body>
 </html> 

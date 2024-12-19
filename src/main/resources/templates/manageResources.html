@@ -6,6 +6,7 @@
 </head>
 <body>
     <h1>学习资源管理</h1>
+    <h2>当前科目: <span th:text="${subjectName}"></span></h2>
     
     <!-- 资源筛选表单 -->
     <form th:action="@{/teachers/resources}" method="get">
@@ -20,20 +21,48 @@
     </form>
 
     <!-- 添加资源表单 -->
-    <form th:action="@{/teachers/resources/add}" method="post">
-        <input type="hidden" name="teacherId" th:value="${teacherId}">
-        <input type="text" name="resourceName" placeholder="资源名称" required>
-        <select name="resourceType" required>
-            <option value="视频">视频</option>
-            <option value="文档">文档</option>
-            <option value="音频">音频</option>
-        </select>
-        <input type="text" name="url" placeholder="资源链接" required>
-        <button type="submit">添加资源</button>
-    </form>
+    <div style="margin: 20px 0;">
+        <h3>添加新资源</h3>
+        <form th:action="@{/teachers/resources/add}" method="post">
+            <input type="hidden" name="teacherId" th:value="${teacherId}">
+
+            
+            <div style="margin: 10px 0;">
+                <label for="resourceName">资源名称:</label>
+                <input type="text" id="resourceName" name="resourceName" required>
+            </div>
+            <label for="subjectId">科目：</label>
+            <select id="subjectId" name="subjectId" required>
+                <option th:each="subject : ${subjects}"
+                        th:value="${subject.subjectId}"
+                        th:text="${ subject.subjectName}">
+                </option>
+            </select>
+            <div style="margin: 10px 0;">
+                <label for="resourceType">资源类型:</label>
+                <select id="resourceType" name="resourceType" required>
+                    <option value="视频">视频</option>
+                    <option value="文档">文档</option>
+                    <option value="音频">音频</option>
+                </select>
+            </div>
+            
+            <div style="margin: 10px 0;">
+                <label for="url">资源链接:</label>
+                <input type="text" id="url" name="url" required>
+            </div>
+            
+            <button type="submit">添加资源</button>
+        </form>
+    </div>
+
+    <!-- 显示消息 -->
+    <div th:if="${message}" style="color: green; margin: 10px 0;" th:text="${message}"></div>
+    <div th:if="${error}" style="color: red; margin: 10px 0;" th:text="${error}"></div>
 
     <!-- 资源列表 -->
-    <table border="1">
+    <h3>资源列表</h3>
+    <table border="1" style="width: 100%; border-collapse: collapse;">
         <thead>
             <tr>
                 <th>资源名称</th>
@@ -53,13 +82,44 @@
                     <form th:action="@{/teachers/resources/delete}" method="post" style="display:inline;">
                         <input type="hidden" name="resourceId" th:value="${resource.resourceId}">
                         <input type="hidden" name="teacherId" th:value="${teacherId}">
-                        <button type="submit">删除</button>
+                        <button type="submit" onclick="return confirm('确定要删除这个资源吗？')">删除</button>
                     </form>
                 </td>
             </tr>
         </tbody>
     </table>
 
-    <a th:href="@{/teachers/teacherMenu(teacherId=${teacherId})}">返回菜单</a>
+    <div style="margin-top: 20px;">
+        <a th:href="@{/teachers/teacherMenu(teacherId=${teacherId})}" class="menu-btn">返回菜单</a>
+    </div>
+
+    <style>
+        table {
+            margin: 20px 0;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        .menu-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+        .menu-btn:hover {
+            background-color: #45a049;
+        }
+        button {
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+        input[type="text"], select {
+            padding: 5px;
+            margin: 5px;
+        }
+    </style>
 </body>
 </html>

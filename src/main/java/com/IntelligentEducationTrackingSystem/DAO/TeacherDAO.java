@@ -1,9 +1,6 @@
 package com.IntelligentEducationTrackingSystem.DAO;
 
-import com.IntelligentEducationTrackingSystem.PO.Assignments;
-import com.IntelligentEducationTrackingSystem.PO.StudentLearningProgress;
-import com.IntelligentEducationTrackingSystem.PO.SubmissionStatus;
-import com.IntelligentEducationTrackingSystem.PO.TeacherComments;
+import com.IntelligentEducationTrackingSystem.PO.*;
 import com.IntelligentEducationTrackingSystem.pojo.StudentProgressDetail;
 import com.IntelligentEducationTrackingSystem.pojo.SubmissionDetails;
 import org.apache.ibatis.annotations.*;
@@ -204,4 +201,43 @@ public interface TeacherDAO {
             @Result(property = "studentName", column = "studentName"),
     })
     List<StudentProgressDetail> getLearningProgress(@Param("teacherId") String teacherId);
+
+
+    @Insert("""
+    INSERT INTO learningresources (
+        resourceId, resourceName, resourceType, 
+        subjectId, teacherId, uploadTime, url
+    ) VALUES (
+        #{resourceId}, #{resourceName}, #{resourceType}, 
+        #{subjectId}, #{teacherId}, #{uploadTime}, #{url}
+    )
+    """)
+    void insertResource(LearningResources resource);
+
+    @Delete("DELETE FROM learningresources WHERE resourceId = #{resourceId}")
+    void deleteResource(String resourceId);
+
+    @Update("""
+    UPDATE learningresources SET 
+        resourceName = #{resourceName},
+        resourceType = #{resourceType},
+        url = #{url}
+    WHERE resourceId = #{resourceId}
+    """)
+    void updateResource(LearningResources resource);
+
+    @Select("""
+    SELECT lr.* FROM learningresources lr
+    JOIN teachers t ON lr.subjectId = t.subjectId
+    WHERE t.teacherId = #{teacherId}
+    AND (#{resourceType} IS NULL OR lr.resourceType = #{resourceType})
+    ORDER BY lr.uploadTime DESC
+    """)
+    List<LearningResources> getResourcesByTeacher(
+            @Param("teacherId") String teacherId,
+            @Param("resourceType") String resourceType
+    );
+
+    @Select("SELECT * FROM learningresources WHERE resourceId = #{resourceId}")
+    LearningResources getResourceById(String resourceId);
 }

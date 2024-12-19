@@ -1,9 +1,6 @@
 package com.IntelligentEducationTrackingSystem.Service;
 
-import com.IntelligentEducationTrackingSystem.PO.Assignments;
-import com.IntelligentEducationTrackingSystem.PO.StudentLearningProgress;
-import com.IntelligentEducationTrackingSystem.PO.Subjects;
-import com.IntelligentEducationTrackingSystem.PO.SubmissionStatus;
+import com.IntelligentEducationTrackingSystem.PO.*;
 import com.IntelligentEducationTrackingSystem.pojo.StudentProgressDetail;
 import com.IntelligentEducationTrackingSystem.pojo.SubmissionDetails;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,4 +21,9 @@ public interface TeacherService {
     @Transactional
     public void updateSubmissionStatus(String studentId, String assignmentId, String status) ;
     List<StudentProgressDetail> getLearningProgress(String teacherId, String subjectName);
+    void addLearningResource(LearningResources resource);
+    void deleteLearningResource(String resourceId, String teacherId);
+    void updateLearningResource(LearningResources resource, String teacherId);
+    List<LearningResources> getResourcesByTeacher(String teacherId, String resourceType);
+    LearningResources getResourceById(String resourceId);
 }

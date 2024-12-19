@@ -1,10 +1,7 @@
 package com.IntelligentEducationTrackingSystem.Service.Impl;
 
 import com.IntelligentEducationTrackingSystem.DAO.TeacherDAO;
-import com.IntelligentEducationTrackingSystem.PO.Assignments;
-import com.IntelligentEducationTrackingSystem.PO.StudentLearningProgress;
-import com.IntelligentEducationTrackingSystem.PO.SubmissionStatus;
-import com.IntelligentEducationTrackingSystem.PO.TeacherComments;
+import com.IntelligentEducationTrackingSystem.PO.*;
 import com.IntelligentEducationTrackingSystem.Service.TeacherService;
 import com.IntelligentEducationTrackingSystem.pojo.StudentProgressDetail;
 import com.IntelligentEducationTrackingSystem.pojo.SubmissionDetails;
@@ -12,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
@@ -119,6 +117,59 @@ public class TeacherServiceImpl implements TeacherService {
             // 返回空列表
             return new ArrayList<>();
         }
+    }
+
+    @Override
+    public void addLearningResource(LearningResources resource) {
+        // 获取教师所教学科
+        String subjectId = teacherDAO.getSubjectIDByTeacherID(resource.getTeacherId());
+        if (subjectId == null) {
+            throw new RuntimeException("未找到教师所教学科信息");
+        }
+
+        // 设置资源信息
+        resource.setResourceId(UUID.randomUUID().toString().substring(0, 10));
+        resource.setSubjectId(subjectId);
+        resource.setUploadTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+                .format(new Date()));
+
+        teacherDAO.insertResource(resource);
+    }
+
+    @Override
+    public void deleteLearningResource(String resourceId, String teacherId) {
+        // 验证该资源是否属于教师所教学科
+        LearningResources resource = teacherDAO.getResourceById(resourceId);
+        String teacherSubject = teacherDAO.getSubjectIDByTeacherID(teacherId);
+
+        if (resource == null || !resource.getSubjectId().equals(teacherSubject)) {
+            throw new RuntimeException("无权删除此资源");
+        }
+
+        teacherDAO.deleteResource(resourceId);
+    }
+
+    @Override
+    public void updateLearningResource(LearningResources resource, String teacherId) {
+        // 验证该资源是否属于教师所教学科
+        String teacherSubject = teacherDAO.getSubjectIDByTeacherID(teacherId);
+        LearningResources existingResource = teacherDAO.getResourceById(resource.getResourceId());
+
+        if (existingResource == null || !existingResource.getSubjectId().equals(teacherSubject)) {
+            throw new RuntimeException("无权修改此资源");
+        }
+
+        teacherDAO.updateResource(resource);
+    }
+
+    @Override
+    public List<LearningResources> getResourcesByTeacher(String teacherId, String resourceType) {
+        return teacherDAO.getResourcesByTeacher(teacherId, resourceType);
+    }
+
+    @Override
+    public LearningResources getResourceById(String resourceId) {
+        return teacherDAO.getResourceById(resourceId);
     }
 
 

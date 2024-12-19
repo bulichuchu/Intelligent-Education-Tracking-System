@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>学习资源管理</title>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <h1>学习资源管理</h1>
+    
+    <!-- 资源筛选表单 -->
+    <form th:action="@{/teachers/resources}" method="get">
+        <input type="hidden" name="teacherId" th:value="${teacherId}">
+        <select name="resourceType">
+            <option value="">全部类型</option>
+            <option value="视频">视频</option>
+            <option value="文档">文档</option>
+            <option value="音频">音频</option>
+        </select>
+        <button type="submit">筛选</button>
+    </form>
+
+    <!-- 添加资源表单 -->
+    <form th:action="@{/teachers/resources/add}" method="post">
+        <input type="hidden" name="teacherId" th:value="${teacherId}">
+        <input type="text" name="resourceName" placeholder="资源名称" required>
+        <select name="resourceType" required>
+            <option value="视频">视频</option>
+            <option value="文档">文档</option>
+            <option value="音频">音频</option>
+        </select>
+        <input type="text" name="url" placeholder="资源链接" required>
+        <button type="submit">添加资源</button>
+    </form>
+
+    <!-- 资源列表 -->
+    <table border="1">
+        <thead>
+            <tr>
+                <th>资源名称</th>
+                <th>类型</th>
+                <th>上传时间</th>
+                <th>链接</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="resource : ${resources}">
+                <td th:text="${resource.resourceName}"></td>
+                <td th:text="${resource.resourceType}"></td>
+                <td th:text="${resource.uploadTime}"></td>
+                <td><a th:href="${resource.url}" target="_blank">查看</a></td>
+                <td>
+                    <form th:action="@{/teachers/resources/delete}" method="post" style="display:inline;">
+                        <input type="hidden" name="resourceId" th:value="${resource.resourceId}">
+                        <input type="hidden" name="teacherId" th:value="${teacherId}">
+                        <button type="submit">删除</button>
+                    </form>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a th:href="@{/teachers/teacherMenu(teacherId=${teacherId})}">返回菜单</a>
+</body>
+</html>

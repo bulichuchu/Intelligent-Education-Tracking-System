@@ -9,10 +9,7 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.text.SimpleDateFormat;
@@ -212,11 +209,66 @@ public class TeacherController {
         return "learningProgress";
     }
 
+    // 在现有代码后添加以下方法
     @GetMapping("/resources")
-    public String manageResources(Model model) {
-        // 查询学习资源列表
-//        model.addAttribute("resources", learningResourceService.getAllResources());
-        return "manageResources"; // 管理学习资源页面
+    public String manageResources(
+            @RequestParam("teacherId") String teacherId,
+            @RequestParam(required = false) String resourceType,
+            Model model
+    ) {
+        String subjectId = teacherDAO.getSubjectIDByTeacherID(teacherId);
+        String subjectName = teacherDAO.getSubjectNameBySubjectID(subjectId);
+
+        List<LearningResources> resources = teacherService.getResourcesByTeacher(teacherId, resourceType);
+
+        model.addAttribute("resources", resources);
+        model.addAttribute("teacherId", teacherId);
+        model.addAttribute("subjectName", subjectName);
+        return "manageResources";
+    }
+
+    @PostMapping("/resources/add")
+    public String addResource(
+            @ModelAttribute LearningResources resource,
+            RedirectAttributes redirectAttributes
+    ) {
+        try {
+            teacherService.addLearningResource(resource);
+            redirectAttributes.addFlashAttribute("message", "资源添加成功");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+        }
+        return "redirect:/teachers/resources?teacherId=" + resource.getTeacherId();
+    }
+
+    @PostMapping("/resources/delete")
+    public String deleteResource(
+            @RequestParam String resourceId,
+            @RequestParam String teacherId,
+            RedirectAttributes redirectAttributes
+    ) {
+        try {
+            teacherService.deleteLearningResource(resourceId, teacherId);
+            redirectAttributes.addFlashAttribute("message", "资源删除成功");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+        }
+        return "redirect:/teachers/resources?teacherId=" + teacherId;
+    }
+
+    @PostMapping("/resources/update")
+    public String updateResource(
+            @ModelAttribute LearningResources resource,
+            @RequestParam String teacherId,
+            RedirectAttributes redirectAttributes
+    ) {
+        try {
+            teacherService.updateLearningResource(resource, teacherId);
+            redirectAttributes.addFlashAttribute("message", "资源更新成功");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+        }
+        return "redirect:/teachers/resources?teacherId=" + teacherId;
     }
 
     @GetMapping("/classSchedule")

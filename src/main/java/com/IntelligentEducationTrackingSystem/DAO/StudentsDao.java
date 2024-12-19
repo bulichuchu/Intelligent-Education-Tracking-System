@@ -2,6 +2,7 @@ package com.IntelligentEducationTrackingSystem.DAO;
 
 import com.IntelligentEducationTrackingSystem.PO.Assignments;
 import com.IntelligentEducationTrackingSystem.PO.ClassNotifications;
+import com.IntelligentEducationTrackingSystem.PO.StudentErrorLogs;
 import com.IntelligentEducationTrackingSystem.PO.Students;
 
 import com.IntelligentEducationTrackingSystem.pojo.StudentCourses;
@@ -35,12 +36,25 @@ public interface StudentsDao {
 
     @Update("UPDATE classes SET className=#{className} WHERE classId=(SELECT classId FROM students WHERE studentId=#{studentId})")
     void updateStudentClassName(@Param("studentId") String studentId, @Param("className") String className);
+    //查询作业名称
+    @Select("SELECT a.assignmentName FROM Assignments a WHERE a.assignmentId = #{assignmentId}")
+    String findAssignmentNameByAssignmentId(@Param("assignmentId") String assignmentId);
+    //查询作业id
+    @Select("SELECT assignmentId FROM assignmentDetails WHERE studentId = #{studentId}")
+    List<assignmentDetails> getAssignmentsByStudentId(@Param("studentId") String studentId);
     //查询作业信息
     @Select("SELECT * FROM assignmentDetails " +
             "WHERE studentId = #{studentId} " +
             "AND (#{subjectName} IS NULL OR #{subjectName} = '' OR subjectName = #{subjectName})")
     public List<assignmentDetails> getAssignmentDetails(@Param("studentId") String studentId,
                                                           @Param("subjectName") String subjectName);
+    // 更新 assignmentgrades 表
+    @Update("UPDATE assignmentgrades SET path=#{filePath} WHERE assignmentId=#{assignmentId} AND studentId=#{studentId}")
+    void updateAssignmentgrades(@Param("assignmentId") String assignmentId, @Param("filePath") String filePath, @Param("studentId") String studentId);
+
+    // 更新 submissionstatus 表
+    @Update("UPDATE submissionstatus SET status=N'已提交', submissionTime=GETDATE() WHERE studentId=#{studentId} AND assignmentId=#{assignmentId}")
+    void updateSubmissionstatus(@Param("studentId") String studentId, @Param("assignmentId") String assignmentId);
     //查看通知
     @Select("SELECT cn.* FROM classnotifications cn " +
             "JOIN students s ON cn.classId = s.classId " +
@@ -53,4 +67,17 @@ public interface StudentsDao {
     //浏览学习资源
     @Select("SELECT * FROM StudentLearning WHERE (#{subjectName} ='' OR subjectName = #{subjectName}) AND (#{resourceType} ='' OR resourceType = #{resourceType})")
     public List<StudentLearning> getStudentLearning(@Param("subjectName") String subjectName, @Param("resourceType") String resourceType);
+    //查看错题集
+    @Select("SELECT * FROM studenterrorlogs WHERE studentId = #{studentId}")
+    public List<StudentErrorLogs> getStudentErrorLogs(@Param("studentId") String studentId);
+    //修改错题集
+    @Update("UPDATE studenterrorlogs SET errorQuestion=#{errorQuestion},errorAnswer=#{errorAnswer},correctAnswer=#{correctAnswer} WHERE errorLogId=#{errorLogId}")
+    void updateStudentErrorLogs(@Param("errorLogId") int errorLogId, @Param("errorQuestion") String errorQuestion, @Param("errorAnswer") String errorAnswer, @Param("correctAnswer") String correctAnswer);
+    //添加错题集
+    @Insert("INSERT INTO studenterrorlogs (studentId, assignmentId, errorQuestion, errorAnswer, correctAnswer) VALUES (#{studentId}, #{assignmentId}, #{errorQuestion}, #{errorAnswer}, #{correctAnswer})")
+    void insertStudentErrorLog(String studentId, String assignmentId, String errorQuestion, String errorAnswer, String correctAnswer);
+    //删除错题集
+    @Delete("DELETE FROM studenterrorlogs WHERE errorLogId = #{errorLogId}")
+    void deleteStudentErrorLog(@Param("errorLogId") int errorLogId);
 }
+

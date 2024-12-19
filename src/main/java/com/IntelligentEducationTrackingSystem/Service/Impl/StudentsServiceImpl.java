@@ -1,7 +1,9 @@
 package com.IntelligentEducationTrackingSystem.Service.Impl;
 
 import com.IntelligentEducationTrackingSystem.DAO.StudentsDao;
+import com.IntelligentEducationTrackingSystem.PO.Assignments;
 import com.IntelligentEducationTrackingSystem.PO.ClassNotifications;
+import com.IntelligentEducationTrackingSystem.PO.StudentErrorLogs;
 import com.IntelligentEducationTrackingSystem.PO.Students;
 import com.IntelligentEducationTrackingSystem.Service.StudentsService;
 import com.IntelligentEducationTrackingSystem.pojo.StudentCourses;
@@ -39,8 +41,15 @@ public class StudentsServiceImpl implements StudentsService {
     public void updateStudentClassName(String studentId, String className) {
         studentsDao.updateStudentClassName(studentId, className);
     }
+    public String findAssignmentNameByAssignmentId(String assignmentId) {
+        return studentsDao.findAssignmentNameByAssignmentId(assignmentId);
+    }
     public List<assignmentDetails> getAssignmentDetails(String studentId, String subjectName) {
         return studentsDao.getAssignmentDetails(studentId, subjectName);
+    }
+    public void updateAssignment(String studentId, String assignmentId, String filePath) {
+        studentsDao.updateAssignmentgrades(assignmentId, filePath, studentId);
+        studentsDao.updateSubmissionstatus(studentId, assignmentId);
     }
     public List<ClassNotifications> getClassNotifications(String studentId) {
         return studentsDao.getClassNotifications(studentId);
@@ -50,5 +59,22 @@ public class StudentsServiceImpl implements StudentsService {
     }
     public List<StudentLearning> getStudentLearning(String subjectName, String resourceType) {
         return studentsDao.getStudentLearning(subjectName,resourceType);
+    }
+    public List<StudentErrorLogs> getStudentErrorLogs(String studentId) {
+        return studentsDao.getStudentErrorLogs(studentId);
+    }
+    public void updateErrorLog(StudentErrorLogs errorLog) {
+        studentsDao.updateStudentErrorLogs(errorLog.getErrorLogId(),
+                errorLog.getErrorQuestion(), errorLog.getErrorAnswer(), errorLog.getCorrectAnswer());
+    }
+    public void addErrorLog(StudentErrorLogs errorLog) {
+        studentsDao.insertStudentErrorLog(errorLog.getStudentId(), errorLog.getAssignmentId(),
+                errorLog.getErrorQuestion(), errorLog.getErrorAnswer(), errorLog.getCorrectAnswer());
+    }
+    public List<assignmentDetails> getAssignmentsByStudentId(String studentId) {
+        return studentsDao.getAssignmentsByStudentId(studentId);
+    }
+    public void deleteErrorLog(int errorLogId) {
+        studentsDao.deleteStudentErrorLog(errorLogId);
     }
 }

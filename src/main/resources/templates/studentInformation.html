@@ -9,6 +9,8 @@
   </script>
 </head>
 <body>
+<h1 th:text="${studentInformation.studentName}"></h1>
+<div th:replace="~{studentMenu :: body}"></div>
 <h1>学生信息</h1>
 <form th:action="@{/students/updateStudent}" th:object="${studentInformation}" method="get" onsubmit="showSuccessMessage()">
   <p>学号: <input type="text" th:field="*{studentId}" readonly="true" /></p>

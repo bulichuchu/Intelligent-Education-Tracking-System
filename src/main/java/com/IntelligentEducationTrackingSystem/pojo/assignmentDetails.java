@@ -17,6 +17,15 @@ public class assignmentDetails {
     private String comment; // 教师的评语内容，对应数据表中的 comment 列
     private Double grade; // 对应数据表中的 grade 列，存储学生此次作业获得的成绩
     private String status; // 对应数据表中的 status 列，例如 "已提交"、"未提交" 等状态描述
+    private String path; // 存放作业提交路径，对应数据表中的 path 列
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
 
     public String getStatus() {
         return status;
@@ -129,6 +138,7 @@ public class assignmentDetails {
                 ", comment='" + comment + '\'' +
                 ", grade=" + grade +
                 ", status='" + status + '\'' +
+                ", path='" + path + '\'' +
                 '}';
     }
 }

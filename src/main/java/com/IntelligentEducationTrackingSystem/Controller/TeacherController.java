@@ -273,10 +273,14 @@ public class TeacherController {
     }
 
     @GetMapping("/classSchedule")
-    public String viewClassSchedule(Model model) {
-        // 查询课程安排
-//        model.addAttribute("schedules", scheduleService.getAllSchedules());
-        return "classSchedule"; // 查看课程安排页面
+    public String viewClassSchedule(
+        @RequestParam("teacherId") String teacherId,
+        Model model
+    ) {
+        List<Map<String, Object>> schedules = teacherService.getTeacherSchedule(teacherId);
+        model.addAttribute("schedules", schedules);
+        model.addAttribute("teacherId", teacherId);
+        return "classSchedule";
     }
 
     @GetMapping("/notifications")

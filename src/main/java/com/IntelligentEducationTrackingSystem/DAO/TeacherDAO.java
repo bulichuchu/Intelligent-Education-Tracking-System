@@ -284,4 +284,19 @@ public interface TeacherDAO {
 
     @Select("SELECT * FROM classnotifications WHERE notificationId = #{notificationId}")
     ClassNotifications getNotificationById(String notificationId);
+
+    @Select("""
+    SELECT DISTINCT c.classId, c.className, s.subjectName
+    FROM classes c
+    JOIN teaching t ON c.classId = t.classId
+    JOIN teachers tc ON t.teacherId = tc.teacherId
+    JOIN subjects s ON tc.subjectId = s.subjectId
+    WHERE t.teacherId = #{teacherId}
+""")
+    @Results({
+            @Result(property = "classId", column = "classId"),
+            @Result(property = "className", column = "className"),
+            @Result(property = "subjectName", column = "subjectName")
+    })
+    List<Map<String, Object>> getTeacherSchedule(String teacherId);
 }

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>课程安排</title>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .schedule-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        .schedule-table th, .schedule-table td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: center;
+        }
+        .schedule-table th {
+            background-color: #f8f9fa;
+            font-weight: bold;
+        }
+        .schedule-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .schedule-table tr:hover {
+            background-color: #f5f5f5;
+        }
+        .btn {
+            display: inline-block;
+            padding: 8px 16px;
+            margin-top: 20px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+        .header {
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>课程安排</h1>
+        </div>
+
+        <table class="schedule-table">
+            <thead>
+                <tr>
+                    <th>班级</th>
+                    <th>课程</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="schedule : ${schedules}">
+                    <td th:text="${schedule.className}"></td>
+                    <td th:text="${schedule.subjectName}"></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <a th:href="@{/teachers/teacherMenu(teacherId=${teacherId})}" class="btn">返回菜单</a>
+    </div>
+</body>
+</html> 

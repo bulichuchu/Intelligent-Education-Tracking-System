@@ -30,4 +30,5 @@ public interface TeacherService {
     List<Map<String, Object>> getNotificationsByTeacher(String teacherId);
     List<Map<String, String>> getTeacherClassList(String teacherId);
     void deleteClassNotification(String notificationId, String teacherId);
+    List<Map<String, Object>> getTeacherSchedule(String teacherId);
 }

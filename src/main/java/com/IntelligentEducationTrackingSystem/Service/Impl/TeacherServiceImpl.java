@@ -215,5 +215,9 @@ public class TeacherServiceImpl implements TeacherService {
         return teacherDAO.getTeacherClassList(teacherId);
     }
 
+    @Override
+    public List<Map<String, Object>> getTeacherSchedule(String teacherId) {
+        return teacherDAO.getTeacherSchedule(teacherId);
+    }
 
 }

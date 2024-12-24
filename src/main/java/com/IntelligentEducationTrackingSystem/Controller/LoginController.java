@@ -33,14 +33,15 @@ public class LoginController {
         if (user != null) {
             // 根据用户名首字母导航到不同页面
             char firstLetter = userId.toUpperCase().charAt(0); // 获取用户名首字母并转换为大写
+            String userRoll = user.getUserType();
             // 如果首字母不匹配，返回登录页面并显示错误信息
-            return switch (firstLetter) {// 如果用户名以 'A' 开头，跳转到管理员界面
-                case 'A' -> "redirect:/admin/dashboard";
-                case 'T' -> {
+            return switch (userRoll) {// 如果用户名以 'A' 开头，跳转到管理员界面
+                case "admin" -> "redirect:/admin/dashboard";
+                case "teacher" -> {
                     session.setAttribute("teacher", user);
                     yield "redirect:/teachers/teacherMenu?teacherID=" + userId;
                 }
-                case 'S' -> {
+                case "student" -> {
                     session.setAttribute("studentId", userId);
                     yield "redirect:/students/studentMenu?studentId=" + userId;
                 }

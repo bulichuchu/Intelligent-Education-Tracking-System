@@ -15,7 +15,7 @@
                 success: function(assignments) {
                     var assignmentSelect = $("#assignmentId");
                     assignments.forEach(function(assignment) {
-                        assignmentSelect.append(new Option(assignment.assignmentId, assignment.assignmentId));
+                        assignmentSelect.append(new Option(assignment.assignmentId + ' - ' + assignment.assignmentName, assignment.assignmentId));
                     });
                 },
                 error: function(error) {
@@ -44,6 +44,7 @@
                 contentType: 'application/json',
                 success: function(response) {
                     alert('添加成功');
+                    location.reload(); // 刷新页面
                 },
                 error: function(error) {
                     alert('添加失败');
@@ -58,10 +59,10 @@
 <form onsubmit="event.preventDefault(); addErrorLog();">
     <label for="studentId">学生ID:</label>
     <input type="text" id="studentId" name="studentId" th:value="${session.studentId}" readonly required><br><br>
-    <label for="assignmentId">作业ID:</label>
+    <label for="assignmentId">作业:</label>
     <select id="assignmentId" name="assignmentId" required>
         <option value="">请选择作业</option>
-        <option th:each="assignment : ${assignments}" th:value="${assignment.assignmentId}" th:text="${assignment.assignmentId}"></option>
+        <option th:each="assignment : ${assignments}" th:value="${assignment.assignmentId}" th:text="${assignment.assignmentId + ' - ' + assignment.assignmentName}"></option>
     </select><br><br>
     <label for="errorQuestion">错误题目:</label>
     <input type="text" id="errorQuestion" name="errorQuestion" required><br><br>

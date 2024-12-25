@@ -40,7 +40,7 @@ public interface StudentsDao {
     @Select("SELECT a.assignmentName FROM Assignments a WHERE a.assignmentId = #{assignmentId}")
     String findAssignmentNameByAssignmentId(@Param("assignmentId") String assignmentId);
     //查询作业id
-    @Select("SELECT assignmentId FROM assignmentDetails WHERE studentId = #{studentId}")
+    @Select("SELECT assignmentId,assignmentName FROM assignmentDetails WHERE studentId = #{studentId}")
     List<assignmentDetails> getAssignmentsByStudentId(@Param("studentId") String studentId);
     //查询作业信息
     @Select("SELECT * FROM assignmentDetails " +

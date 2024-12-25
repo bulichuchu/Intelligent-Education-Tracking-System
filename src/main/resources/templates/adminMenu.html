@@ -15,6 +15,12 @@
             border: 3px solid #f1f1f1;
             z-index: 9;
         }
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
     </style>
     <script>
         function openForm(button) {
@@ -45,11 +51,17 @@
         function showSuccessMessage() {
             alert("信息更新成功！");
         }
+        function logout() {
+            window.location.href = '/login';
+        }
     </script>
 </head>
 <body>
 <h1>用户列表</h1>
-<button onclick="openForm1()">添加</button>
+<div class="button-container">
+    <button onclick="openForm1()">添加</button>
+    <button class="logout" onclick="logout()">退出</button>
+</div>
 <ul>
     <table>
         <tr>

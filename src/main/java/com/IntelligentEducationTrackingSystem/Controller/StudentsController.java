@@ -18,6 +18,9 @@ import jakarta.servlet.http.HttpSession;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.Map;
 
@@ -57,23 +60,36 @@ public class StudentsController {
                                        @RequestParam(value = "subjectName", required = false) String subjectName,
                                        Model model) {
         List<assignmentDetails> assignmentDetailsList = studentsService.getAssignmentDetails(studentId, subjectName);
-        boolean anyGraded = assignmentDetailsList.stream().anyMatch(a -> a.getGrade() != null || (a.getComment() != null && !a.getComment().isEmpty()));
         setStudentName(studentId, model);
         model.addAttribute("assignmentDetails", assignmentDetailsList);
         model.addAttribute("studentId", studentId);
-        model.addAttribute("anyGraded", anyGraded);
         return "assignmentDetails";
     }
-    @PostMapping("/uploadAssignment")//上传作业
+    @PostMapping("/uploadAssignment")
     public String uploadAssignment(@RequestParam("file") MultipartFile file, @RequestParam("studentId") String studentId, @RequestParam("assignmentId") String assignmentId, Model model) {
         if (!file.isEmpty()) {
             try {
-                // 保存文件到本地
-                String filePath = new File("src/main/resources/uploads/" + file.getOriginalFilename()).getAbsolutePath();
-                file.transferTo(new File(filePath));
+                // 确保上传目录存在
+                File uploadDir = new File("src/main/resources/uploads");
+                if (!uploadDir.exists()) {
+                    uploadDir.mkdirs();
+                }
+
+                // 处理文件名冲突
+                String originalFilename = file.getOriginalFilename();
+                Path destinationPath = new File(uploadDir, originalFilename).toPath();
+                int counter = 1;
+                while (Files.exists(destinationPath)) {
+                    String newFilename = originalFilename.replace(".", "_" + counter + ".");
+                    destinationPath = new File(uploadDir, newFilename).toPath();
+                    counter++;
+                }
+
+                // 复制文件到本地
+                Files.copy(file.getInputStream(), destinationPath, StandardCopyOption.REPLACE_EXISTING);
 
                 // 更新数据库中的path和status字段
-                studentsService.updateAssignment(studentId, assignmentId, filePath);
+                studentsService.updateAssignment(studentId, assignmentId, destinationPath.toString());
 
                 // 获取更新后的作业详情
                 List<assignmentDetails> assignmentDetails = studentsService.getAssignmentDetails(studentId, null);

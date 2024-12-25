@@ -30,6 +30,7 @@
                     contentType: false,
                     success: function(data) {
                         alert('上传成功');
+                        location.reload(); // 上传成功后刷新页面
                     },
                     error: function() {
                         alert('上传失败');
@@ -97,7 +98,7 @@
         <td th:text="${assignment.getStatus()}"></td>
         <td>
             <details>
-                <summary th:text="${anyGraded != null && anyGraded ? '已批改' : '未批改'}">展开</summary>
+                <summary th:text="${assignment.getGrade() != null || assignment.getComment() != '' ? '已批改' : '未批改'}">展开</summary>
                 <p>成绩: <span th:text="${assignment.getGrade() != null ? assignment.getGrade() : '暂无成绩'}"></span></p>
                 <p>教师评语: <span th:text="${assignment.getComment() != '' ? assignment.getComment() : '暂无评语'}"></span></p>
             </details>

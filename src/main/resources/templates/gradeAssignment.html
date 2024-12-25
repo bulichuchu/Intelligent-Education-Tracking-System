@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>批改作业</title>
+    <title>录入作业</title>
     <style>
         .grade-form {
             margin: 20px;
@@ -47,14 +47,14 @@
 </style>
 <body>
 
-    <h1>批改作业</h1>
+    <h1>录入作业</h1>
     <!-- 在扫码区域添加以下内容 -->
     <div class="scan-section">
-        <h2>扫描纸质作业</h2>
+        <h2>录入纸质作业</h2>
         <form id="scanForm" th:action="@{/teachers/scanCode}" method="post">
             <input type="hidden" name="teacherId" th:value="${teacherId}" />
 
-            <label for="scanAssignmentId">选择要批改的作业：</label>
+            <label for="scanAssignmentId">选择要录入的作业：</label>
             <select name="assignmentId" id="scanAssignmentId" required>
                 <option value="">请选择作业</option>
                 <option th:each="assignment : ${assignments}"
@@ -171,7 +171,8 @@
                         <button th:if="${submission.status.strip() == '已提交'}" 
                                 onclick="showGradeForm(this)" 
                                 th:data-student-id="${submission.studentId}"
-                                th:data-student-name="${submission.studentName}">
+                                th:data-student-name="${submission.studentName}"
+                                th:data-student-path="${submission.path}">
                             批改
                         </button>
                         <span th:if="${submission.status.strip() != '已提交'}">
@@ -192,6 +193,12 @@
             <input type="hidden" id="studentId" name="studentId" />
             <p>学生：<span id="studentName"></span></p>
             <p>
+                <label>作业文件：</label>
+                <a id="assignmentFileLink" target="_blank">查看作业文件</a>
+
+            </p>
+
+            <p>
                 <label>成绩：</label>
                 <input type="number" name="grade" min="0" max="100" required />
             </p>
@@ -207,9 +214,20 @@
         function showGradeForm(button) {
             const studentId = button.getAttribute('data-student-id');
             const studentName = button.getAttribute('data-student-name');
-            
+            const studentPath = button.getAttribute('data-student-path');
+
             document.getElementById('studentId').value = studentId;
             document.getElementById('studentName').textContent = studentName;
+            // 修改文件链接设置
+            const assignmentFileLink = document.getElementById('assignmentFileLink');
+            if (studentPath) {
+                const fileName = studentPath.split('/').pop(); // 获取文件名
+                assignmentFileLink.href = `/teachers/files/${fileName}`; // 设置正确的URL
+                assignmentFileLink.style.display = 'inline';
+            } else {
+                assignmentFileLink.style.display = 'none';
+            }
+
             document.getElementById('gradeForm').style.display = 'block';
         }
     </script>

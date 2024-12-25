@@ -1,5 +1,5 @@
 package com.IntelligentEducationTrackingSystem.Controller;
-
+import org.springframework.http.MediaType;
 import com.IntelligentEducationTrackingSystem.DAO.TeacherDAO;
 import com.IntelligentEducationTrackingSystem.PO.*;
 import com.IntelligentEducationTrackingSystem.Service.TeacherService;
@@ -7,11 +7,18 @@ import com.IntelligentEducationTrackingSystem.pojo.StudentProgressDetail;
 import com.IntelligentEducationTrackingSystem.pojo.SubmissionDetails;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.net.MalformedURLException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -177,6 +184,63 @@ public class TeacherController {
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", "评分提交失败：" + e.getMessage());
             return "redirect:/teachers/gradeAssignment?teacherId=" + teacherId + "&assignmentId=" + assignmentId;
+        }
+    }
+    @GetMapping("/files/{fileName:.+}")
+    @ResponseBody
+    public ResponseEntity<Resource> serveFile(@PathVariable String fileName) {
+        try {
+            // 创建文件路径
+            Path filePath = Paths.get("src/main/resources/uploads").resolve(fileName);
+            Resource resource = new UrlResource(filePath.toUri());
+
+            // 检查文件是否存在且可读
+            if (resource.exists() && resource.isReadable()) {
+                // 获取文件扩展名
+                String extension = fileName.substring(fileName.lastIndexOf(".") + 1).toLowerCase();
+                String contentType;
+
+                // 根据文件扩展名设置 Content-Type
+                switch (extension) {
+                    case "jpg":
+                    case "jpeg":
+                        contentType = "image/jpeg";
+                        break;
+                    case "png":
+                        contentType = "image/png";
+                        break;
+                    case "gif":
+                        contentType = "image/gif";
+                        break;
+                    case "pdf":
+                        contentType = "application/pdf";
+                        break;
+                    case "doc":
+                        contentType = "application/msword";
+                        break;
+                    case "docx":
+                        contentType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+                        break;
+                    case "xls":
+                        contentType = "application/vnd.ms-excel";
+                        break;
+                    case "xlsx":
+                        contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                        break;
+                    default:
+                        contentType = "application/octet-stream";  // 默认类型
+                }
+
+                // 返回文件
+                return ResponseEntity.ok()
+                        .contentType(MediaType.parseMediaType(contentType))
+                        .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + resource.getFilename() + "\"")
+                        .body(resource);
+            } else {
+                return ResponseEntity.notFound().build();  // 文件不存在
+            }
+        } catch (MalformedURLException e) {
+            return ResponseEntity.badRequest().build();  // URL 无效
         }
     }
 

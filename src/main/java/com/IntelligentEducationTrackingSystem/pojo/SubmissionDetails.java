@@ -12,6 +12,7 @@ public class SubmissionDetails {
     private String studentName;
     private String assignmentName;
     private String className;
+    private String path;
 
     public SubmissionDetails() {
     }
@@ -78,5 +79,13 @@ public class SubmissionDetails {
 
     public void setClassName(String className) {
         this.className = className;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
     }
 }

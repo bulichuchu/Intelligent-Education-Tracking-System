@@ -86,14 +86,23 @@ public interface TeacherDAO {
     List<Assignments> getTeacherAssignments(String teacherId);
 
     @Select("""
-            SELECT ss.submissionstatusid, ss.assignmentid, ss.studentid, 
-                   ss.submissiontime, ss.status, s.studentname, 
-                   a.assignmentname, c.classname
+            SELECT\s
+                ss.submissionstatusId,\s
+                ss.assignmentId,\s
+                ss.studentId,
+                ss.submissiontime,\s
+                ss.status,\s
+                s.studentname,
+                a.assignmentname,\s
+                c.classname,
+                ag.path
             FROM submissionstatus ss
-            JOIN students s ON ss.studentid = s.studentid
-            JOIN assignments a ON ss.assignmentid = a.assignmentid
-            JOIN classes c ON s.classid = c.classid
-            WHERE ss.assignmentid = #{assignmentId}
+            JOIN students s ON ss.studentId = s.studentId
+            JOIN assignments a ON ss.assignmentId = a.assignmentId
+            JOIN classes c ON s.classId = c.classId
+            LEFT JOIN assignmentgrades ag ON ss.assignmentId = ag.assignmentId\s
+                AND ss.studentId = ag.studentId
+            WHERE ss.assignmentId = #{assignmentId}
             """)
     List<SubmissionDetails> getSubmissionsByAssignmentId(String assignmentId);
 

@@ -69,7 +69,7 @@ public class StudentsController {
         if (!file.isEmpty()) {
             try {
                 // 保存文件到本地
-                String filePath = new File("src/main/resources/uploads/" + file.getOriginalFilename()).getAbsolutePath();
+                String filePath = "src/main/resources/uploads/" + file.getOriginalFilename();
                 file.transferTo(new File(filePath));
 
                 // 更新数据库中的path和status字段

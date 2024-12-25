@@ -85,7 +85,7 @@
         <td th:text="${resource.resourceType}"></td>
         <td th:text="${resource.subjectName}"></td>
         <td th:text="${resource.teacherName}"></td>
-        <td th:text="${resource.uploadTime}"></td>
+        <td th:text="${#dates.format(resource.uploadTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
     </tr>
     </tbody>
 </table>

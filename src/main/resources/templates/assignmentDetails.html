@@ -92,8 +92,8 @@
         <td th:text="${assignment.getSubjectName()}"></td>
         <td th:text="${assignment.getAssignmentName()}"></td>
         <td th:text="${assignment.getTeacherName()}"></td>
-        <td th:text="${assignment.getReleaseTime()}"></td>
-        <td th:text="${assignment.getDueTime()}"></td>
+        <td th:text="${#dates.format(assignment.getReleaseTime(), 'yyyy-MM-dd HH:mm:ss')}"></td>
+        <td th:text="${#dates.format(assignment.getDueTime(), 'yyyy-MM-dd HH:mm:ss')}"></td>
         <td th:text="${assignment.getStatus()}"></td>
         <td>
             <details>

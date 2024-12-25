@@ -56,9 +56,10 @@ public class StudentsController {
         return "redirect:/students/studentInformation";
     }
     @GetMapping("/assignmentDetails")//查询作业详情
-    public String getAssignmentDetails(@RequestParam("studentId") String studentId,
+    public String getAssignmentDetails(HttpSession session,
                                        @RequestParam(value = "subjectName", required = false) String subjectName,
                                        Model model) {
+        String studentId = (String) session.getAttribute("studentId");
         List<assignmentDetails> assignmentDetailsList = studentsService.getAssignmentDetails(studentId, subjectName);
         setStudentName(studentId, model);
         model.addAttribute("assignmentDetails", assignmentDetailsList);

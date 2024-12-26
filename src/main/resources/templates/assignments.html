@@ -47,7 +47,7 @@
         <td th:text="${submission.className}"></td>
         <td th:text="${submission.studentName}"></td>
         <td th:text="${submission.assignmentName}"></td>
-        <td th:text="${submission.submissionTime}"></td>
+        <td th:text="${#dates.format(submission.getSubmissionTime(),'yyyy-MM-dd HH:mm:ss')}"></td>
         <td th:text="${submission.status}"></td>
     </tr>
     </tbody>

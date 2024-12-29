@@ -7,6 +7,30 @@ body {
     color: #333;
 }
 
+/* 文件提交按钮 */
+input[type = "file"]::-webkit-file-upload-button {
+    background-color: #3498db;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s;
+}
+
+input[type = "file"]::-webkit-file-upload-button:hover {
+    background-color: #2980b9;
+}
+
+input[type = "file"]::-webkit-file-upload-button.btn-danger {
+    background-color: #e74c3c;
+}
+
+input[type = "file"]::-webkit-file-upload-button.btn-danger:hover {
+    background-color: #c0392b;
+}
+
 .container {
     max-width: 1200px;
     margin: 0 auto;

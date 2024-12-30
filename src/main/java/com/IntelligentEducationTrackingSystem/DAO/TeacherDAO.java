@@ -324,7 +324,7 @@ public interface TeacherDAO {
     List<Map<String, Object>> getTeacherSchedule(String teacherId);
     @Update("""
     UPDATE assignmentgrades 
-    SET grade = #{grade},
+    SET grade = #{grade}
     WHERE assignmentId = #{assignmentId} 
     AND studentId = #{studentId}
     AND teacherId = #{teacherId}

@@ -89,8 +89,10 @@ public class StudentsController {
                 // 复制文件到本地
                 Files.copy(file.getInputStream(), destinationPath, StandardCopyOption.REPLACE_EXISTING);
 
+                String pathStr = destinationPath.toString();
+                String newPath = pathStr.replace("\\","/");//修改为可用的路径
                 // 更新数据库中的path和status字段
-                studentsService.updateAssignment(studentId, assignmentId, destinationPath.toString());
+                studentsService.updateAssignment(studentId, assignmentId, newPath);
 
                 // 获取更新后的作业详情
                 List<assignmentDetails> assignmentDetails = studentsService.getAssignmentDetails(studentId, null);

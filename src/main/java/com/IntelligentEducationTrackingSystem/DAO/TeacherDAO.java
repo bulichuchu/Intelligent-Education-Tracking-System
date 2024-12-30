@@ -77,8 +77,8 @@ public interface TeacherDAO {
                                                     @Param("assignmentId") String assignmentId,
                                                     @Param("className") String className);
 
-    @Select("SELECT DISTINCT c.className FROM classes c " +
-            "JOIN classes tc ON c.classId = tc.classId " +
+    @Select("SELECT c.className FROM classes c " +
+            "JOIN teaching tc ON c.classID = tc.classID " +
             "WHERE tc.teacherId = #{teacherId}")
     List<String> getTeacherClasses(String teacherId);
 

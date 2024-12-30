@@ -53,7 +53,7 @@ public interface StudentsDao {
     void updateAssignmentgrades(@Param("assignmentId") String assignmentId, @Param("filePath") String filePath, @Param("studentId") String studentId);
 
     // 更新 submissionstatus 表
-    @Update("UPDATE submissionstatus SET status=N'已提交', submissionTime=GETDATE() WHERE studentId=#{studentId} AND assignmentId=#{assignmentId}")
+    @Update("UPDATE submissionstatus SET status=N'已提交', submissionTime=DATEADD(HOUR, 8, GETDATE()) WHERE studentId=#{studentId} AND assignmentId=#{assignmentId}")
     void updateSubmissionstatus(@Param("studentId") String studentId, @Param("assignmentId") String assignmentId);
     //查看通知
     @Select("SELECT cn.* FROM classnotifications cn " +

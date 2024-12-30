@@ -13,6 +13,7 @@ public class SubmissionDetails {
     private String assignmentName;
     private String className;
     private String path;
+    private String grade;
 
     public SubmissionDetails() {
     }
@@ -87,5 +88,13 @@ public class SubmissionDetails {
 
     public void setPath(String path) {
         this.path = path;
+    }
+
+    public String getGrade() {
+        return grade;
+    }
+
+    public void setGrade(String grade) {
+        this.grade = grade;
     }
 }

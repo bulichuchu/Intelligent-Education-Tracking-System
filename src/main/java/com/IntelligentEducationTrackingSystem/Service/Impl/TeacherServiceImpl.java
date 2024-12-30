@@ -36,6 +36,14 @@ public class TeacherServiceImpl implements TeacherService {
             status.setStudentId(studentId);
             status.setStatus("未提交");
             teacherDAO.insertSubmissionStatus(status);}
+
+        for (String studentId : studentIds) {
+            AssignmentGrades assignmentGrades = new AssignmentGrades();
+            assignmentGrades.setGradeId(UUID.randomUUID().toString().replace("-", "").substring(0, 10));
+            assignmentGrades.setAssignmentId(assignmentId);
+            assignmentGrades.setStudentId(studentId);
+            assignmentGrades.setTeacherId(teacherId);
+            teacherDAO.insertAssignmentGrades(assignmentGrades);}
     }
 
     @Override
@@ -62,6 +70,15 @@ public class TeacherServiceImpl implements TeacherService {
     @Override
     @Transactional
     public void gradeAssignment(String studentId, String assignmentId, int grade, String comment, String teacherId) {
+        // 检查作业是否已经被批改过
+        List<SubmissionDetails> submissions = teacherDAO.getSubmissionsByAssignmentId(assignmentId);
+        boolean alreadyGraded = submissions.stream()
+                .filter(s -> s.getStudentId().equals(studentId))
+                .anyMatch(s -> s.getGrade() != null);
+
+        if (alreadyGraded) {
+            throw new RuntimeException("该作业已经被批改过，不能重复批改");
+        }
         String commentId = UUID.randomUUID().toString().replace("-", "").substring(0, 10);
         String gradeId = UUID.randomUUID().toString().replace("-", "").substring(0, 10);
 
@@ -76,7 +93,8 @@ public class TeacherServiceImpl implements TeacherService {
         teacherComment.setCommentTime(calendar.getTime());
 
         teacherDAO.saveTeacherComment(teacherComment);
-        teacherDAO.insertAssignmentGrade(gradeId, assignmentId, studentId, grade, teacherId);
+        // 更新成绩
+        teacherDAO.updateAssignmentGrade(assignmentId, studentId, grade, teacherId);
     }
 
     @Override

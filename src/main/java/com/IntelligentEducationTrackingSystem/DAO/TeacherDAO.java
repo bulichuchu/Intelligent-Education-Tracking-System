@@ -95,7 +95,8 @@ public interface TeacherDAO {
                 s.studentname,
                 a.assignmentname,\s
                 c.classname,
-                ag.path
+                ag.path,
+                ag.grade
             FROM submissionstatus ss
             JOIN students s ON ss.studentId = s.studentId
             JOIN assignments a ON ss.assignmentId = a.assignmentId
@@ -174,6 +175,19 @@ public interface TeacherDAO {
     )
 """)
     void insertSubmissionStatus(SubmissionStatus status);
+
+    @Insert("""
+            INSERT INTO assignmentgrades(
+            gradeID,assignmentid, 
+                    studentid, grade,teacherID,path)
+                    values (
+                    #{gradeId},
+                    #{assignmentId},
+                    #{studentId},null,
+                    #{teacherId},null
+                    )
+            """)
+    void insertAssignmentGrades(AssignmentGrades assignmentGrades);
 
     @Update("""
     UPDATE submissionstatus 
@@ -308,4 +322,17 @@ public interface TeacherDAO {
             @Result(property = "subjectName", column = "subjectName")
     })
     List<Map<String, Object>> getTeacherSchedule(String teacherId);
+    @Update("""
+    UPDATE assignmentgrades 
+    SET grade = #{grade},
+    WHERE assignmentId = #{assignmentId} 
+    AND studentId = #{studentId}
+    AND teacherId = #{teacherId}
+""")
+    void updateAssignmentGrade(
+            @Param("assignmentId") String assignmentId,
+            @Param("studentId") String studentId,
+            @Param("grade") int grade,
+            @Param("teacherId") String teacherId
+    );
 }

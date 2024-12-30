@@ -9,9 +9,11 @@
             padding: 15px;
             border: 1px solid #ddd;
         }
+
         .submission-list {
             margin: 20px;
         }
+
         .scan-section {
             margin: 20px;
             padding: 15px;
@@ -35,11 +37,13 @@
         border: 1px solid transparent;
         border-radius: 4px;
     }
+
     .alert-success {
         color: #3c763d;
         background-color: #dff0d8;
         border-color: #d6e9c6;
     }
+
     .alert-danger {
         color: #a94442;
         background-color: #f2dede;
@@ -48,192 +52,200 @@
 </style>
 <body>
 
-    <h1>录入作业</h1>
-    <!-- 在扫码区域添加以下内容 -->
-    <div class="scan-section">
-        <h2>录入纸质作业</h2>
-        <form id="scanForm" th:action="@{/teachers/scanCode}" method="post">
-            <input type="hidden" name="teacherId" th:value="${teacherId}" />
+<h1>录入作业</h1>
+<!-- 在扫码区域添加以下内容 -->
+<div class="scan-section">
+    <h2>录入纸质作业</h2>
+    <form id="scanForm" th:action="@{/teachers/scanCode}" method="post">
+        <input type="hidden" name="teacherId" th:value="${teacherId}"/>
 
-            <label for="scanAssignmentId">选择要录入的作业：</label>
-            <select name="assignmentId" id="scanAssignmentId" required>
-                <option value="">请选择作业</option>
-                <option th:each="assignment : ${assignments}"
-                        th:value="${assignment.assignmentId}"
-                        th:text="${assignment.assignmentName}">
-                </option>
-            </select>
+        <label for="scanAssignmentId">选择要录入的作业：</label>
+        <select name="assignmentId" id="scanAssignmentId" required>
+            <option value="">请选择作业</option>
+            <option th:each="assignment : ${assignments}"
+                    th:value="${assignment.assignmentId}"
+                    th:text="${assignment.assignmentName}">
+            </option>
+        </select>
 
-            <div>
-                <video id="qrScanner" style="width: 320px; height: 240px;"></video>
-            </div>
-            <div id="scanResult"></div>
-            <input type="hidden" id="qrCodeInput" name="qrCode" />
-        </form>
-    </div>
+        <div>
+            <video id="qrScanner" style="width: 320px; height: 240px;"></video>
+        </div>
+        <div id="scanResult"></div>
+        <input type="hidden" id="qrCodeInput" name="qrCode"/>
+    </form>
+</div>
 
-    <!-- 添加必要的JavaScript库和代码 -->
-    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
-    <script>
-        const video = document.getElementById('qrScanner');
-        const scanResult = document.getElementById('scanResult');
-        const scanForm = document.getElementById('scanForm');
-        const qrCodeInput = document.getElementById('qrCodeInput');
+<!-- 添加必要的JavaScript库和代码 -->
+<script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
+<script>
+    const video = document.getElementById('qrScanner');
+    const scanResult = document.getElementById('scanResult');
+    const scanForm = document.getElementById('scanForm');
+    const qrCodeInput = document.getElementById('qrCodeInput');
 
-        // 请求摄像头权限并开始扫描
-        async function startScanning() {
-            try {
-                const stream = await navigator.mediaDevices.getUserMedia({
-                    video: { facingMode: "environment" }
-                });
-                video.srcObject = stream;
-                video.play();
-                requestAnimationFrame(scan);
-            } catch (err) {
-                console.error('摄像头访问失败:', err);
-                scanResult.textContent = '无法访问摄像头，请确保已授予摄像头权限。';
-            }
+    // 请求摄像头权限并开始扫描
+    async function startScanning() {
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({
+                video: {facingMode: "environment"}
+            });
+            video.srcObject = stream;
+            video.play();
+            requestAnimationFrame(scan);
+        } catch (err) {
+            console.error('摄像头访问失败:', err);
+            scanResult.textContent = '无法访问摄像头，请确保已授予摄像头权限。';
         }
+    }
 
-        // 扫描二维码
-        function scan() {
-            if (video.readyState === video.HAVE_ENOUGH_DATA) {
-                const canvas = document.createElement('canvas');
-                canvas.width = video.videoWidth;
-                canvas.height = video.videoHeight;
-                const ctx = canvas.getContext('2d');
-                ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-                const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    // 扫描二维码
+    function scan() {
+        if (video.readyState === video.HAVE_ENOUGH_DATA) {
+            const canvas = document.createElement('canvas');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
 
-                const code = jsQR(imageData.data, imageData.width, imageData.height);
+            const code = jsQR(imageData.data, imageData.width, imageData.height);
 
-                if (code) {
-                    // 检查是否是有效的学生ID格式（假设学生ID是S开头的字符串）
-                    if (code.data.startsWith('S')) {
-                        scanResult.textContent = '扫描成功！学生ID: ' + code.data;
-                        qrCodeInput.value = code.data;
-                        // 停止视频流
-                        video.srcObject.getTracks().forEach(track => track.stop());
-                        // 提交表单
-                        scanForm.submit();
-                        return;
-                    }
+            if (code) {
+                // 检查是否是有效的学生ID格式（假设学生ID是S开头的字符串）
+                if (code.data.startsWith('S')) {
+                    scanResult.textContent = '扫描成功！学生ID: ' + code.data;
+                    qrCodeInput.value = code.data;
+                    // 停止视频流
+                    video.srcObject.getTracks().forEach(track => track.stop());
+                    // 提交表单
+                    scanForm.submit();
+                    return;
                 }
             }
-            requestAnimationFrame(scan);
+        }
+        requestAnimationFrame(scan);
+    }
+
+    // 页面加载完成后启动扫描
+    window.onload = startScanning;
+</script>
+<!-- 扫码区域 -->
+<!-- <div class="scan-section">
+    <h2>扫描纸质作业</h2>
+    <form th:action="@{/teachers/scanCode}" method="post">
+        <input type="hidden" name="teacherId" th:value="${teacherId}" />
+        <input type="text" name="qrCode" placeholder="扫描二维码" />
+        <button type="submit">扫描提交</button>
+    </form>
+</div> -->
+
+<!-- 作业选择 -->
+<div class="assignment-select">
+    <form th:action="@{/teachers/gradeAssignment}" method="get">
+        <input type="hidden" name="teacherId" th:value="${teacherId}"/>
+        <select name="assignmentId" onchange="this.form.submit()">
+            <option value="">选择作业</option>
+            <option th:each="assignment : ${assignments}"
+                    th:value="${assignment.assignmentId}"
+                    th:text="${assignment.assignmentName}"
+                    th:selected="${param.assignmentId == assignment.assignmentId}">
+            </option>
+        </select>
+    </form>
+</div>
+
+<!-- 提交列表 -->
+<div class="submission-list" th:if="${submissions != null}">
+    <h2>提交情况</h2>
+    <table border="1">
+        <thead>
+        <tr>
+            <th>学生姓名</th>
+            <th>提交时间</th>
+            <th>状态</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="submission : ${submissions}">
+            <td th:text="${submission.studentName}"></td>
+            <td th:text="${#dates.format(submission.submissionTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
+            <td th:text="${submission.status}"></td>
+            <td>
+        <span th:if="${submission.status.strip() != '已提交'}">
+            未提交
+        </span>
+                <span th:if="${submission.status.strip() == '已提交'}">
+            <!-- 如果已经有成绩，只显示成绩 -->
+            <span th:if="${submission.grade != null}">
+                已批改 (成绩: <span th:text="${submission.grade}"></span>)
+            </span>
+                    <!-- 只有在已提交且没有成绩的情况下才显示批改按钮 -->
+            <span th:if="${submission.grade == null}">
+                <button onclick="showGradeForm(this)"
+                        th:data-student-id="${submission.studentId}"
+                        th:data-student-name="${submission.studentName}"
+                        th:data-student-path="${submission.path}">
+                    批改
+                </button>
+            </span>
+        </span>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- 批改表单 -->
+<div id="gradeForm" class="grade-form" style="display: none;">
+    <h3>批改作业</h3>
+    <form th:action="@{/teachers/submitGrade}" method="post">
+        <input type="hidden" name="teacherId" th:value="${teacherId}"/>
+        <input type="hidden" name="assignmentId" th:value="${param.assignmentId}"/>
+        <input type="hidden" id="studentId" name="studentId"/>
+        <p>学生：<span id="studentName"></span></p>
+        <p>
+            <label>作业文件：</label>
+            <a id="assignmentFileLink" target="_blank">查看作业文件</a>
+
+        </p>
+
+        <p>
+            <label>成绩：</label>
+            <input type="number" name="grade" min="0" max="100" required/>
+        </p>
+        <p>
+            <label>评语：</label>
+            <textarea name="comment" rows="4" cols="50"></textarea>
+        </p>
+        <button type="submit">提交评分</button>
+    </form>
+</div>
+
+<script>
+    function showGradeForm(button) {
+        const studentId = button.getAttribute('data-student-id');
+        const studentName = button.getAttribute('data-student-name');
+        const studentPath = button.getAttribute('data-student-path');
+
+        document.getElementById('studentId').value = studentId;
+        document.getElementById('studentName').textContent = studentName;
+        // 修改文件链接设置
+        const assignmentFileLink = document.getElementById('assignmentFileLink');
+        if (studentPath) {
+            const fileName = studentPath.split('/').pop(); // 获取文件名
+            assignmentFileLink.href = `/teachers/files/${fileName}`; // 设置正确的URL
+            assignmentFileLink.style.display = 'inline';
+        } else {
+            assignmentFileLink.style.display = 'none';
         }
 
-        // 页面加载完成后启动扫描
-        window.onload = startScanning;
-    </script>
-    <!-- 扫码区域 -->
-    <!-- <div class="scan-section">
-        <h2>扫描纸质作业</h2>
-        <form th:action="@{/teachers/scanCode}" method="post">
-            <input type="hidden" name="teacherId" th:value="${teacherId}" />
-            <input type="text" name="qrCode" placeholder="扫描二维码" />
-            <button type="submit">扫描提交</button>
-        </form>
-    </div> -->
-
-    <!-- 作业选择 -->
-    <div class="assignment-select">
-        <form th:action="@{/teachers/gradeAssignment}" method="get">
-            <input type="hidden" name="teacherId" th:value="${teacherId}" />
-            <select name="assignmentId" onchange="this.form.submit()">
-                <option value="">选择作业</option>
-                <option th:each="assignment : ${assignments}"
-                        th:value="${assignment.assignmentId}"
-                        th:text="${assignment.assignmentName}"
-                        th:selected="${param.assignmentId == assignment.assignmentId}">
-                </option>
-            </select>
-        </form>
-    </div>
-
-    <!-- 提交列表 -->
-    <div class="submission-list" th:if="${submissions != null}">
-        <h2>提交情况</h2>
-        <table border="1">
-            <thead>
-                <tr>
-                    <th>学生姓名</th>
-                    <th>提交时间</th>
-                    <th>状态</th>
-                    <th>操作</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each="submission : ${submissions}">
-                    <td th:text="${submission.studentName}"></td>
-                    <td th:text="${#dates.format(submission.submissionTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
-                    <td th:text="${submission.status}"></td>
-                    <td>
-                        <button th:if="${submission.status.strip() == '已提交'}" 
-                                onclick="showGradeForm(this)" 
-                                th:data-student-id="${submission.studentId}"
-                                th:data-student-name="${submission.studentName}"
-                                th:data-student-path="${submission.path}">
-                            批改
-                        </button>
-                        <span th:if="${submission.status.strip() != '已提交'}">
-                            未提交
-                        </span>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-
-    <!-- 批改表单 -->
-    <div id="gradeForm" class="grade-form" style="display: none;">
-        <h3>批改作业</h3>
-        <form th:action="@{/teachers/submitGrade}" method="post">
-            <input type="hidden" name="teacherId" th:value="${teacherId}" />
-            <input type="hidden" name="assignmentId" th:value="${param.assignmentId}" />
-            <input type="hidden" id="studentId" name="studentId" />
-            <p>学生：<span id="studentName"></span></p>
-            <p>
-                <label>作业文件：</label>
-                <a id="assignmentFileLink" target="_blank">查看作业文件</a>
-
-            </p>
-
-            <p>
-                <label>成绩：</label>
-                <input type="number" name="grade" min="0" max="100" required />
-            </p>
-            <p>
-                <label>评语：</label>
-                <textarea name="comment" rows="4" cols="50"></textarea>
-            </p>
-            <button type="submit">提交评分</button>
-        </form>
-    </div>
-
-    <script>
-        function showGradeForm(button) {
-            const studentId = button.getAttribute('data-student-id');
-            const studentName = button.getAttribute('data-student-name');
-            const studentPath = button.getAttribute('data-student-path');
-
-            document.getElementById('studentId').value = studentId;
-            document.getElementById('studentName').textContent = studentName;
-            // 修改文件链接设置
-            const assignmentFileLink = document.getElementById('assignmentFileLink');
-            if (studentPath) {
-                const fileName = studentPath.split('/').pop(); // 获取文件名
-                assignmentFileLink.href = `/teachers/files/${fileName}`; // 设置正确的URL
-                assignmentFileLink.style.display = 'inline';
-            } else {
-                assignmentFileLink.style.display = 'none';
-            }
-
-            document.getElementById('gradeForm').style.display = 'block';
-        }
-    </script>
-    <div style="margin-top: 20px;">
-        <a th:href="@{/teachers/teacherMenu(teacherId=${teacherId})}" class="menu-btn">返回菜单</a>
-    </div>
+        document.getElementById('gradeForm').style.display = 'block';
+    }
+</script>
+<div style="margin-top: 20px;">
+    <a th:href="@{/teachers/teacherMenu(teacherId=${teacherId})}" class="menu-btn">返回菜单</a>
+</div>
 </body>
 </html> 
